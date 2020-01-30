@@ -40,24 +40,25 @@
 
 {#if numberOfWords}
     Saved ({numberOfWords}):
-    <!-- <div class="ui items ">
-    <div class="item"> -->
-            <div class="ui bulleted list saved-words">
-                {#each Object.keys(chunks) as chunkId}
-                    {#each chunks[chunkId] as savedWord, i}
-                        <div class="item saved-word {active.chunk == chunkId && active.word == i ? "currently-editing" : ""}"
-                             on:click={() => dispatch("selectSavedWord", {chunk: chunkId, word: i})}>
-                             <b>{savedWord.input}</b>:
-                             {savedWord.translation}
+    <div class="ui bulleted list saved-words">
+        {#each Object.keys(chunks) as chunkId}
+            <div class="item">
+                {#each chunks[chunkId] as savedWord, i}
+                    <div class="item saved-word {active.chunk == chunkId && active.word == i ? "currently-editing" : ""}"
+                         on:click={() => dispatch("selectSavedWord", {chunk: chunkId, word: i})}>
+                         {#if chunks[chunkId].length >= 2}
+                             <small>{i + 1}</small>
+                         {/if}
+                         <b>{savedWord.input}</b>:
+                         {savedWord.translation}
 
-                             <i class="close link red icon delete-saved-word"
-                                on:click|stopPropagation={() => dispatch("deleteSavedWord", i)} />
-                        </div>
-                    {/each}
+                         <i class="close link red icon delete-saved-word"
+                            on:click|stopPropagation={() => dispatch("deleteSavedWord", {chunk: chunkId, word: i})} />
+                    </div>
                 {/each}
             </div>
-        <!--</div>
-    </div>-->
+        {/each}
+    </div>
 {:else}
     The words you save will appear here.
 {/if}

@@ -138,12 +138,12 @@
             texts = texts;
     }
 
-    function deleteSavedWord({ detail }) {
+    function deleteSavedWord({ detail: { chunk, i} }) {
         if(!confirm("Wanna delete this word?"))
             return;
 
-        savedChunks[currentlyEditing.chunk].splice(detail, 1);
-        savedChunks[currentlyEditing.chunk] = savedChunks[currentlyEditing.chunk]
+        savedChunks[chunk].splice(i, 1);
+        savedChunks[chunk] = savedChunks[chunk]
         persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
     }
 </script>
@@ -193,7 +193,6 @@
                              on:changeChunk={({ detail }) => switchChunk(detail)}/>
             {:else}
                 No text.
-                <div class="ui divider" />
             {/if}
         </div>
 
