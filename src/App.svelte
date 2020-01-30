@@ -165,13 +165,13 @@
         {/if}
 
         <TextSourceSelect currentId={currentlyEditing.textId} {texts}
-                          on:selectText={({ detail }) => selectText(detail)}
-                          on:deleteText={({ detail }) => deleteText(detail)} />
+                          on:select={({ detail }) => selectText(detail)}
+                          on:delete={({ detail }) => deleteText(detail)} />
 
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
-                                 on:selectSavedWord={selectSavedWord}
-                                 on:deleteSavedWord={deleteSavedWord}/>
+                                 on:select={selectSavedWord}
+                                 on:delete={deleteSavedWord}/>
         </div>
     </div>
 
