@@ -149,9 +149,16 @@
     .grid { border: 1px solid black; }
     a { display: block; }
 
-    .text-delete-list .text-delete-item a { float: left; }
-    .text-delete-list .text-delete-item > i { float: right; display: none; }
-    .text-delete-list .text-delete-item:hover > i { float: right; display: block; }
+    .text-delete-list .text-delete-item a { margin-right: 1em; /* space for the 'x' button */ }
+
+    .text-delete-list .text-delete-item > i {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .text-delete-list .text-delete-item:hover > i { display: block; }
 
     a.active-text-title {
         color: #003;
