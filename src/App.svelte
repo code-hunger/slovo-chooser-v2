@@ -2,6 +2,7 @@
     import ChunkEditor from "./ChunkEditor.svelte"
     import SavedWordsContainer from "./SavedWordsHistory.svelte"
     import TextAdder from "./TextAdder.svelte"
+    import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv from "./exportToCSV.js"
     import { persistSavedWords, retrieveSavedWords } from "./utils.js"
     import md5 from "md5";
@@ -126,11 +127,15 @@
         texts.splice(i, 1);
         persistTexts(texts);
 
-        currentlyEditing = {
-            textId: null,
-            chunk: null,
-            word: null
-        }
+        if(currentlyEditing.textId == i)
+            currentlyEditing = {
+                textId: null,
+                chunk: null,
+                word: null
+            }
+        else
+            // Need to trigger an update because of the call to texts.splice()
+            texts = texts;
     }
 
     function deleteSavedWord({ detail }) {
@@ -148,22 +153,6 @@
 <style>
     .grid { border: 1px solid black; }
     a { display: block; }
-
-    .text-delete-list .text-delete-item a { margin-right: 1em; /* space for the 'x' button */ }
-
-    .text-delete-list .text-delete-item > i {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-
-    .text-delete-list .text-delete-item:hover > i { display: block; }
-
-    a.active-text-title {
-        color: #003;
-        text-decoration: underline;
-    }
 </style>
 
 <div class="ui stackable grid container">
@@ -175,20 +164,9 @@
             </a>
         {/if}
 
-        {#if texts.length}
-            Choose a text source:
-            <div class="ui bulleted list text-delete-list">
-                {#each texts as text, i (text[0])}
-                    <div class="item text-delete-item">
-                        <a href="#" on:click|preventDefault={() => selectText(i)}
-                           class="{i == currentlyEditing.textId ? "active-text-title" : ""}">
-                           {text[0]}
-                        </a>
-                        <i class="close link red icon" on:click={() => deleteText(i)} />
-                    </div>
-                {/each}
-            </div>
-        {/if}
+        <TextSourceSelect currentId={currentlyEditing.textId} {texts}
+                          on:selectText={({ detail }) => selectText(detail)}
+                          on:deleteText={({ detail }) => deleteText(detail)} />
 
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
