@@ -114,12 +114,12 @@
 <svelte:window on:keydown={({ key, altKey }) => fireCombo(key, altKey)} />
 
 <div class="ui form">
-<div class="ui stackable internally celled grid">
-    <div class="eleven wide computer column">
+<div class="ui stackable celled grid">
+    <div class="sixteen wide tablet eleven wide computer column">
         <h3 class="ui header">Your text</h3>
         <WordCollector words={words} markedClass="unknown" on:wordClick={toggleUnknown} />
     </div>
-    <div class="five wide computer column">
+    <div class="sixteen wide tablet five wide computer column">
         <h3 class="ui header">Marked words</h3>
         <WordCollector words={marked} markedClass="entered" on:wordClick={toggleEntered} />
 
@@ -127,13 +127,16 @@
             {#if initialInput}
                 <label>Currently editing: <i>{initialInput}</i></label>
             {/if}
-            <div class="ui icon input">
+            <div class="ui action icon input">
                 <input type="text"
                        placeholder="Search words"
                        bind:value={inputValue}
                        on:keyup={inputKeyup}
                        on:keydown={e => {if(e.keyCode == 13) applySearch()}} />
                        <i class="close link icon" on:click={clearInput}></i>
+                       <button class="ui icon button" on:click={applySearch}>
+                           <i class="search icon" />
+                       </button>
             </div>
         </div>
     </div>
@@ -157,6 +160,7 @@
             </div>
         </div>
     </div>
+
     <div class="column row centered">
         {#if initialInput}
             <button class="ui button" on:click={submit}>Update it!</button>
