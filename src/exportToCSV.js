@@ -20,6 +20,7 @@ export const convertToCsv = rows =>
   rows.reduce((prev, row) => prev + processRow(row), "");
 
 export function exportToFile(filename, content) {
+  if(typeof content !== "string") throw "Only strings may be saved to files!";
   const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
   if (navigator.msSaveBlob) {
     // IE 10+
