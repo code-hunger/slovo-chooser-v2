@@ -77,16 +77,20 @@
         exportToCsv(texts[currentlyEditing.textId][0] + ".csv", csvArray);
     }
 
-    function exportState() {
-        let state = "";
+    function combineAllState() {
+        let state = {};
 
         for(let i = 0; i < localStorage.length; ++i) {
             let name = localStorage.key(i);
-            state += name + ": " + localStorage.getItem(name) + "\n";
+            state[name] = JSON.parse(localStorage.getItem(name));
         }
 
-        const fileName = "slovo_choser_v2_state_" + new Date().toISOString() + ".txt";
-        exportToFile(fileName, (state));
+        return state;
+    }
+
+    function exportState() {
+        const fileName = "slovo_choser_v2_state_" + new Date().toISOString() + ".json";
+        exportToFile(fileName, JSON.stringify(combineAllState()));
     }
 
     function persistTexts(texts) {
