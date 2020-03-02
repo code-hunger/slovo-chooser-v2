@@ -116,7 +116,7 @@
         }
 
         currentlyEditing.textId = i;
-        currentlyEditing.chunk = texts[i][2] || 0;
+        currentlyEditing.chunk = parseInt(texts[i][2] || 0);
     }
 
     function switchChunk(dir) {
@@ -128,11 +128,14 @@
 
         const nextChunkId = currentlyEditing.chunk + dir;
 
-        if(nextChunkId in texts[currentlyEditing.textId][1]) {
-            currentlyEditing.chunk = nextChunkId;
-            texts[currentlyEditing.textId][2] = nextChunkId;
-            persistTexts(texts);
+        if(!(nextChunkId in texts[currentlyEditing.textId][1])) {
+            alert("Next chunk id " + nextChunkId + " not found in text.");
+            return
         }
+
+        currentlyEditing.chunk = nextChunkId;
+        texts[currentlyEditing.textId][2] = nextChunkId;
+        persistTexts(texts);
     }
 
     function deleteText(i) {
