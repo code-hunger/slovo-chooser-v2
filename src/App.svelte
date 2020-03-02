@@ -3,7 +3,7 @@
     import SavedWordsContainer from "./SavedWordsHistory.svelte"
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
-    import exportToCsv from "./exportToCSV.js"
+    import exportToCsv, { exportToFile } from "./exportToCSV.js"
     import { persistSavedWords, retrieveSavedWords } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
@@ -75,6 +75,18 @@
         }
 
         exportToCsv(texts[currentlyEditing.textId][0] + ".csv", csvArray);
+    }
+
+    function exportState() {
+        let state = "";
+
+        for(let i = 0; i < localStorage.length; ++i) {
+            let name = localStorage.key(i);
+            state += name + ": " + localStorage.getItem(name) + "\n";
+        }
+
+        const fileName = "slovo_choser_v2_state_" + new Date().toISOString() + ".txt";
+        exportToFile(fileName, (state));
     }
 
     function persistTexts(texts) {
@@ -158,6 +170,7 @@
 <div class="ui stackable grid container">
     <div class="three wide column">
         <a href='#' on:click|preventDefault={download}>Export to CSV</a>
+        <a href='#' on:click|preventDefault={exportState}>Export whole state</a>
         {#if !showTextAdder}
             <a href='#' on:click|preventDefault={() => showTextAdder = true}>
                 Add a new text source
