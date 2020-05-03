@@ -7,25 +7,37 @@
 </script>
 
 <style>
-    .item-holder { margin-right: 1.5em; /* space for the 'x' button */ }
+    .item-holder {
+        /* space for the 'x' button, because it has absolute position */
+        margin-right: 1.5em;
+    }
 
-    .deletable-item > i.close.icon {
+    .deletable-item > .delete-saved-word {
         display: none ;
         position: absolute;
         right: 0;
-        top: 3px;
+        top: 10%;
     }
 
-    .deletable-item:hover > i.close.icon { display: block ; }
+    .non-button {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .deletable-item:hover > .delete-saved-word,
+    .deletable-item:focus > .delete-saved-word { display: block ; }
 </style>
 
-<div class="item deletable-item {classes.join(' ')}" on:click={() => !disabled && dispatch("click")}>
+<div class="item deletable-item {classes.join(' ')}"
+     on:click={() => !disabled && dispatch("click")}>
     <div class="item-holder">
         <slot />
     </div>
 
     {#if !disabled}
-        <i class="close link red icon delete-saved-word"
-           on:click|stopPropagation={() => dispatch("delete")} />
+        <button class="non-button delete-saved-word">
+            <i class="close link red icon" on:click|stopPropagation={() => dispatch("delete")} />
+        </button>
     {/if}
 </div>
