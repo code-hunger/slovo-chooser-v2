@@ -32,8 +32,7 @@
     <div class="ui bulleted list saved-words">
         {#each Object.keys(chunks) as chunkId}
             {#each chunks[chunkId] as savedWord, i}
-                <DeletableItem disabled={active.chunk == chunkId && active.word == i}
-                               on:click={makeDispatcher('select', chunkId, i)}
+                <DeletableItem on:click={makeDispatcher('select', chunkId, i)}
                                on:delete={makeDispatcher('delete', chunkId, i)}>
                     <div class="saved-word"
                          class:currently-editing={active.chunk == chunkId && active.word == i}
