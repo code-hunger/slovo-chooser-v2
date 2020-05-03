@@ -35,10 +35,12 @@
                 <DeletableItem disabled={active.chunk == chunkId && active.word == i}
                                on:click={makeDispatcher('select', chunkId, i)}
                                on:delete={makeDispatcher('delete', chunkId, i)}>
-                <div class="saved-word" class:currently-editing={active.chunk == chunkId && active.word == i}>
-                    <b>{savedWord.input}</b>:
-                    {savedWord.translation}
-                </div>
+                    <div class="saved-word"
+                         class:currently-editing={active.chunk == chunkId && active.word == i}
+                         tabindex=0>
+                        <b>{savedWord.input}</b>:
+                        {savedWord.translation}
+                    </div>
                 </DeletableItem>
             {/each}
         {/each}

@@ -29,7 +29,7 @@
     <div class="ui bulleted list">
         {#each texts as text, i (text[0])}
             <DeletableItem on:click={makeDispatcher("select", i)} on:delete={makeDispatcher("delete", i)}>
-                <div class="item-link" class:active-text-title={i == currentId}>{text[0]}</div>
+                <div class="item-link" class:active-text-title={i == currentId} tabindex=0>{text[0]}</div>
             </DeletableItem>
         {/each}
     </div>
