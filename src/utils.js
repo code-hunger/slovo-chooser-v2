@@ -132,6 +132,13 @@ export function persistSavedWords(title, savedChunks) {
   localStorage.setItem("chunks-" + md5(title), JSON.stringify(savedChunks));
 }
 
+export function immutableSplice(arr, i) {
+  return [
+    ...arr.slice(0, i), // `slice` extracts up to but not including `end`
+    ...arr.slice(i + 1)
+  ];
+}
+
 export function retrieveSavedWords(title) {
   const saved = localStorage.getItem("chunks-" + md5(title));
   return saved ? JSON.parse(saved) : {};

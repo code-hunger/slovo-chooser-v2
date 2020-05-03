@@ -4,7 +4,7 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv, { exportToFile } from "./exportToCSV.js"
-    import { persistSavedWords, retrieveSavedWords } from "./utils.js"
+    import { persistSavedWords, retrieveSavedWords, immutableSplice } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -40,9 +40,7 @@
             currentlyEditing.word = null;
         }
 
-        console.log("before:",savedChunks);
         persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
-        console.log(savedChunks);
     }
 
     function onCancelEdit() {
@@ -157,12 +155,11 @@
             texts = texts;
     }
 
-    function deleteSavedWord({ detail: { chunk, i} }) {
+    function deleteSavedWord({ detail: { chunk, word } }) {
         if(!confirm("Wanna delete this word?"))
             return;
 
-        savedChunks[chunk].splice(i, 1);
-        savedChunks[chunk] = savedChunks[chunk]
+        savedChunks[chunk] = immutableSplice(savedChunks[chunk], word);
         persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
     }
 </script>
