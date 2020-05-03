@@ -156,7 +156,14 @@
     }
 
     function deleteSavedWord({ detail: { chunk, word } }) {
-        if(!confirm("Wanna delete this word?"))
+        if(currentlyEditing.chunk == chunk && currentlyEditing.word == word)
+        {
+            if(!confirm("You're currently editing this word. Are you sure you want to delete it?"))
+                return;
+
+            currentlyEditing.word = null;
+        }
+        else if(!confirm("Wanna delete this word?"))
             return;
 
         savedChunks[chunk] = immutableSplice(savedChunks[chunk], word);
