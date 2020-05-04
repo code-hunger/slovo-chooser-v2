@@ -1,21 +1,25 @@
 <script>
+    import PartialContextSelector from "./PartialContextSelector.svelte";
+    import KeepContextSelector from "./KeepContextSelector.svelte";
+
     export let chosenStrategy = 2, words, initialContext = '';
 
-    const strategies = [
+    $: strategies = [
         {
             desc: "Keep same (no changes)",
-            call: function() {  },
-            viable: initialContext.length > 0
+            viable: initialContext && initialContext.length > 0,
+            component: KeepContextSelector,
+            properties: { initialContext }
         },
         {
             desc: 'Use the whole chunk as a context',
-            call: function () {},
             viable: true
         },
         {
             desc:'Choose only part of the chunk to use as a context.',
-            call: function () {},
-            viable: true
+            viable: true,
+            component: PartialContextSelector,
+            properties: { words }
         }
     ];
 </script>
@@ -42,6 +46,13 @@
                 {/if}
             {/each}
         </div>
+
+        <!-- yeah it's bad to hard-code constants -->
+        {#if strategies[chosenStrategy].component}
+            <svelte:component
+                this={strategies[chosenStrategy].component}
+                {...strategies[chosenStrategy].properties} />
+        {/if}
     </div>
 {:else}
     No words :( So no context could be selected.
