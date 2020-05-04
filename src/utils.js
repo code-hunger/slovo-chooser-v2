@@ -144,6 +144,21 @@ export function retrieveSavedWords(title) {
   return saved ? JSON.parse(saved) : {};
 }
 
+export function textDeleterCreator(currentlyEditingUpdater, textsUpdater) {
+  return (currentTextId, texts) => ({ detail }) => {
+    const i = detail; // the text id to delete
+
+    if(!confirm("Delete text ", texts[i][0]))
+      return;
+
+    localStorage.removeItem("chunks-" + md5(texts[i][0]));
+    textsUpdater(immutableSplice(texts, i));
+
+    if(currentTextId == i)
+      currentlyEditingUpdater({ textId: null, chunk: null, word: null })
+  }
+}
+
 export function savedWordDeleter(savedChunksUpdater, currentlyEditing, savedChunks, texts) {
   console.log("savedWordDeleter called!");
   return ({ detail: { chunk, word } }) => {

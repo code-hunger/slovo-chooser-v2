@@ -4,7 +4,7 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv, { exportToFile } from "./exportToCSV.js"
-    import { persistSavedWords, retrieveSavedWords, savedWordDeleter } from "./utils.js"
+    import { persistSavedWords, retrieveSavedWords, savedWordDeleter, textDeleterCreator } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -136,26 +136,16 @@
         persistTexts(texts);
     }
 
-    function deleteText(i) {
-        if(!confirm("Delete text ", texts[i][0]))
-            return;
+    function chunkUpdater(chunk, newValue) { savedChunks[chunk] = newValue; }
 
-        localStorage.removeItem("chunks-" + md5(texts[i][0]));
-        texts.splice(i, 1);
+    function currentlyEditingUpdater(newValue) { currentlyEditing = newValue; }
+
+    function textsUpdater(newTexts) {
+        texts = newTexts;
         persistTexts(texts);
-
-        if(currentlyEditing.textId == i)
-            currentlyEditing = {
-                textId: null,
-                chunk: null,
-                word: null
-            }
-        else
-            // Need to trigger an update because of the call to texts.splice()
-            texts = texts;
     }
 
-    function chunkUpdater(chunk, newValue) { savedChunks[chunk] = newValue; }
+    const textDeleter = textDeleterCreator(currentlyEditingUpdater, textsUpdater);
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -177,7 +167,7 @@
 
         <TextSourceSelect currentId={currentlyEditing.textId} {texts}
                           on:select={({ detail }) => selectText(detail)}
-                          on:delete={({ detail }) => deleteText(detail)} />
+                          on:delete={textDeleter(currentlyEditing.textId, texts)} />
 
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
