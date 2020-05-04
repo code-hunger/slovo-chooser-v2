@@ -1,5 +1,6 @@
 import _ from "lodash";
 import md5 from "md5";
+import exportToCsv, { exportToFile } from "./exportToCSV.js"
 
 export function arrayToggle(arr, el) {
   for (let x of arr) {
@@ -217,5 +218,32 @@ export function onSaveChunkCreator(currentWordUpdater, savedChunksUpdater) {
       currentWordUpdater(null);
     }
   }
+}
+
+export function combineAllState() {
+  let state = {};
+
+  for(let i = 0; i < localStorage.length; ++i) {
+    let name = localStorage.key(i);
+    state[name] = JSON.parse(localStorage.getItem(name));
+  }
+
+  return state;
+}
+
+export function exportState() {
+  const fileName = "slovo_choser_v2_state_" + new Date().toISOString() + ".json";
+  exportToFile(fileName, JSON.stringify(combineAllState()));
+}
+
+export function downloadSavedWords(currentTextTitle, savedChunks) {
+  const csvArray = _.flatMap(savedChunks).map(_.values);
+
+  if(!csvArray.length) {
+    alert("No saved chunks!");
+    return;
+  }
+
+  exportToCsv(currentTextTitle + ".csv", csvArray);
 }
 

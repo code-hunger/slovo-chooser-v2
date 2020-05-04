@@ -3,8 +3,8 @@
     import SavedWordsContainer from "./SavedWordsHistory.svelte"
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
-    import exportToCsv, { exportToFile } from "./exportToCSV.js"
-    import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator } from "./utils.js"
+    import exportToCsv from "./exportToCSV.js"
+    import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator, downloadSavedWords, exportState } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -46,33 +46,6 @@
 
         currentlyEditing.chunk = detail.chunk;
         currentlyEditing.word = detail.word;
-    }
-
-    function download() {
-        const csvArray = _.flatMap(savedChunks).map(_.values);
-
-        if(!csvArray.length) {
-            alert("No saved chunks!");
-            return;
-        }
-
-        exportToCsv(texts[currentlyEditing.textId][0] + ".csv", csvArray);
-    }
-
-    function combineAllState() {
-        let state = {};
-
-        for(let i = 0; i < localStorage.length; ++i) {
-            let name = localStorage.key(i);
-            state[name] = JSON.parse(localStorage.getItem(name));
-        }
-
-        return state;
-    }
-
-    function exportState() {
-        const fileName = "slovo_choser_v2_state_" + new Date().toISOString() + ".json";
-        exportToFile(fileName, JSON.stringify(combineAllState()));
     }
 
     function addText({ detail: { title, lines } }) {
@@ -124,6 +97,7 @@
     const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater);
     const switchChunk = switchChunkCreator(currentChunkIdUpdater);
     const onSaveChunk = onSaveChunkCreator(currentWordUpdater, currentSavedChunksUpdater);
+    const download = () => downloadSavedWords(texts[currentlyEditing.textId][0], savedChunks)
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
