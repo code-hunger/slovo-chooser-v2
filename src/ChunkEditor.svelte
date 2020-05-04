@@ -30,6 +30,9 @@
     function toggleUnknown({ detail }) {
         if(words[detail.i].marked)
             inputValue = smartRemoveFromString(inputValue, detail.word.word)
+        else
+            if(trimPunctuation(inputValue) == "")
+                inputValue = detail.word.word;
 
         words[detail.i] = wordToggleMark(words[detail.i]);
         marked = arrayToggle(marked, wordUnmark(words[detail.i]));

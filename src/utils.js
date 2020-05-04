@@ -1,5 +1,6 @@
 import _ from "lodash";
 import md5 from "md5";
+import XRegExp from "xregexp";
 import exportToCsv, { exportToFile } from "./exportToCSV.js"
 
 export function arrayToggle(arr, el) {
@@ -42,7 +43,9 @@ export function trimPunctuation(str) {
 }
 
 export function makeWordPresenceRegex(word) {
-  return RegExp("\\b" + _.escapeRegExp(trimPunctuation(word)) + "\\b", "i");
+  const bounadry = "(?:\\P{L}|^|$)"; // unlike \\b, works properly no non-ascii chars
+
+  return XRegExp(bounadry + _.escapeRegExp(trimPunctuation(word)) + bounadry, "i");
 }
 
 export function containsWord(str, word) {
