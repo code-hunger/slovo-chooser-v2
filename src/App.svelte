@@ -4,7 +4,7 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv, { exportToFile } from "./exportToCSV.js"
-    import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts } from "./utils.js"
+    import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -26,22 +26,6 @@
     $: initialTranslation = currentlyEditing.chunk != null && currentlyEditing.word != null
         ? savedChunks[currentlyEditing.chunk][currentlyEditing.word].translation
         : null
-
-    function onSaveChunk({ detail }) {
-        const chunkId = currentlyEditing.chunk;
-
-        if(!savedChunks[chunkId])
-            savedChunks[chunkId] = [];
-
-        if(currentlyEditing.word == null) {
-            savedChunks[chunkId] = [...savedChunks[chunkId], detail];
-        } else {
-            savedChunks[chunkId][currentlyEditing.word] = detail;
-            currentlyEditing.word = null;
-        }
-
-        persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
-    }
 
     function onCancelEdit() {
         if(confirm("Cancel edit?"))
@@ -114,8 +98,11 @@
     }
 
     function savedChunksUpdater(chunk, newValue) {
-        savedChunks[chunk] = newValue; 
+        savedChunks[chunk] = newValue;
         persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
+    }
+    function currentSavedChunksUpdater(newValue) {
+        savedChunksUpdater(currentlyEditing.chunk, newValue);
     }
 
     function currentChunkIdUpdater(newChunkId) {
@@ -136,6 +123,7 @@
     const textDeleter = textDeleterCreator(currentlyEditingUpdater, textsUpdater);
     const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater);
     const switchChunk = switchChunkCreator(currentChunkIdUpdater);
+    const onSaveChunk = onSaveChunkCreator(currentWordUpdater, currentSavedChunksUpdater);
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -180,7 +168,7 @@
                              initialTranslation={initialTranslation}
 
                              on:requestCancelEdit={onCancelEdit}
-                             on:saveChunk={onSaveChunk}
+                             on:saveChunk={onSaveChunk(currentlyEditing.word, savedChunks[currentlyEditing.chunk])}
                              on:changeChunk={switchChunk(currentlyEditing, texts[currentlyEditing.textId])}/>
             {:else}
                 No text.

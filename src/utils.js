@@ -139,6 +139,14 @@ export function immutableSplice(arr, i) {
   ];
 }
 
+export function immutableArrayUpdate(arr, i, newVal) {
+  return [
+    ...arr.slice(0, i), // `slice` extracts up to but not including `end`
+    newVal,
+    ...arr.slice(i + 1)
+  ];
+}
+
 export function retrieveSavedWords(title) {
   const saved = localStorage.getItem("chunks-" + md5(title));
   return saved ? JSON.parse(saved) : {};
@@ -181,7 +189,7 @@ export function persistTexts(texts) {
   localStorage.setItem("texts", JSON.stringify(texts));
 }
 
-export function switchChunkCreator(currentChunkUpdater) {
+export function switchChunkCreator(currentChunkIdUpdater) {
   return (currentlyEditing, currentText) => ({ detail }) => {
     const dir = detail > 0 ? 1 : -1;
     if(currentlyEditing.word != null) {
@@ -196,6 +204,18 @@ export function switchChunkCreator(currentChunkUpdater) {
       return
     }
 
-    currentChunkUpdater(nextChunkId);
+    currentChunkIdUpdater(nextChunkId);
   }
 }
+
+export function onSaveChunkCreator(currentWordUpdater, savedChunksUpdater) {
+  return (currentlyEditingWord, currentChunkSaved = []) => ({ detail }) => {
+    if(currentlyEditingWord == null) {
+      savedChunksUpdater([...currentChunkSaved, detail]);
+    } else {
+      savedChunksUpdater(immutableArrayUpdate(currentChunkSaved, currentlyEditingWord, detail));
+      currentWordUpdater(null);
+    }
+  }
+}
+
