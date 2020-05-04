@@ -26,6 +26,9 @@
     $: initialTranslation = currentlyEditing.chunk != null && currentlyEditing.word != null
         ? savedChunks[currentlyEditing.chunk][currentlyEditing.word].translation
         : null
+    $: initialContext = currentlyEditing.chunk != null && currentlyEditing.word != null
+        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word].context
+        : null
 
     function onCancelEdit() {
         if(confirm("Cancel edit?"))
@@ -139,6 +142,7 @@
                 <ChunkEditor chunkText={texts[currentlyEditing.textId][1][currentlyEditing.chunk]}
                              initialInput={initialInput}
                              initialTranslation={initialTranslation}
+                             initialContext={initialContext}
 
                              on:requestCancelEdit={onCancelEdit}
                              on:saveChunk={onSaveChunk(currentlyEditing.word, savedChunks[currentlyEditing.chunk])}

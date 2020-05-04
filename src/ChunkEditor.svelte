@@ -7,7 +7,7 @@
     import ContextStrategyChooser from "./ContextStrategyChooser.svelte";
     import _ from "lodash"
 
-    export let chunkText, initialInput = null, initialTranslation = null;
+    export let chunkText, initialInput = null, initialTranslation = null, initialContext = null;
 
     const dispatch = createEventDispatcher();
 
@@ -167,7 +167,7 @@
 
     <div class="row">
         <div class="sixteen wide column">
-            <ContextStrategyChooser words={words} />
+            <ContextStrategyChooser words={words} initialContext={initialContext} />
         </div>
     </div>
 
