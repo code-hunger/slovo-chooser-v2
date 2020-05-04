@@ -4,6 +4,7 @@
     import update from "immutability-helper"
     import { tick, createEventDispatcher } from 'svelte';
     import { arrayToggle, wordToggleMark, wordUnmark, containsWord, smartToggleSubstring, smartRemoveFromString, trimPunctuation, emphasizeWordInStr, inferEnteredFromInput, updateMarkedFromInput } from "./utils.js"
+    import ContextStrategyChooser from "./ContextStrategyChooser.svelte";
     import _ from "lodash"
 
     export let chunkText, initialInput = null, initialTranslation = null;
@@ -161,6 +162,12 @@
                         <i class="close link icon" on:click={() => translationValue=''} />
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="sixteen wide column">
+            <ContextStrategyChooser words={words} />
         </div>
     </div>
 
