@@ -28,7 +28,7 @@ export function updateMarkedFromInput(marked, input) {
   }));
 }
 
-const punctuation = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/;
+const punctuation = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-./:;<=>?@[\]^_`{|}~]/;
 
 const endingPunctuation = RegExp(punctuation.source + "+$");
 
@@ -159,22 +159,43 @@ export function textDeleterCreator(currentlyEditingUpdater, textsUpdater) {
   }
 }
 
-export function savedWordDeleter(savedChunksUpdater, currentlyEditing, savedChunks, texts) {
-  console.log("savedWordDeleter called!");
-  return ({ detail: { chunk, word } }) => {
+export function savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater) {
+  return (currentlyEditing, savedChunks) => ({ detail: { chunk, word } }) => {
     if(currentlyEditing.chunk == chunk && currentlyEditing.word == word)
     {
       if(!confirm("You're currently editing this word.\n" +
         "Are you sure you want to delete it?"))
         return;
 
-      currentlyEditing.word = null;
+      currentWordUpdater(null);
     }
     else if(!confirm("Wanna delete this word?")) {
       return;
     }
 
     savedChunksUpdater(chunk, immutableSplice(savedChunks[chunk], word));
-    persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
   };
+}
+
+export function persistTexts(texts) {
+  localStorage.setItem("texts", JSON.stringify(texts));
+}
+
+export function switchChunkCreator(currentChunkUpdater) {
+  return (currentlyEditing, currentText) => ({ detail }) => {
+    const dir = detail > 0 ? 1 : -1;
+    if(currentlyEditing.word != null) {
+      alert("A word is currently being edited!")
+      return
+    }
+
+    const nextChunkId = dir + currentlyEditing.chunk;
+
+    if(!(nextChunkId in currentText[1])) {
+      alert("Next chunk id '" + nextChunkId + "' not found in text.");
+      return
+    }
+
+    currentChunkUpdater(nextChunkId);
+  }
 }

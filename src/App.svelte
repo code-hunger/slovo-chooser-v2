@@ -4,7 +4,7 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv, { exportToFile } from "./exportToCSV.js"
-    import { persistSavedWords, retrieveSavedWords, savedWordDeleter, textDeleterCreator } from "./utils.js"
+    import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -91,10 +91,6 @@
         exportToFile(fileName, JSON.stringify(combineAllState()));
     }
 
-    function persistTexts(texts) {
-        localStorage.setItem("texts", JSON.stringify(texts));
-    }
-
     function addText({ detail: { title, lines } }) {
         if(_.find(texts, o => o[0] == title)) {
             alert("There is already a text with this title!");
@@ -117,28 +113,20 @@
         currentlyEditing.chunk = parseInt(texts[i][2] || 0);
     }
 
-    function switchChunk(dir) {
-        dir = dir > 0 ? 1 : -1; // Just in case...
-        if(currentlyEditing.word != null) {
-            alert("A word is currently being edited!")
-            return
-        }
+    function savedChunksUpdater(chunk, newValue) {
+        savedChunks[chunk] = newValue; 
+        persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
+    }
 
-        const nextChunkId = currentlyEditing.chunk + dir;
-
-        if(!(nextChunkId in texts[currentlyEditing.textId][1])) {
-            alert("Next chunk id " + nextChunkId + " not found in text.");
-            return
-        }
-
-        currentlyEditing.chunk = nextChunkId;
-        texts[currentlyEditing.textId][2] = nextChunkId;
+    function currentChunkIdUpdater(newChunkId) {
+        if(typeof newChunkId !== "number") { alert("Internall type error!") }
+        currentlyEditing.chunk = newChunkId;
+        texts[currentlyEditing.textId][2] = newChunkId;
         persistTexts(texts);
     }
 
-    function chunkUpdater(chunk, newValue) { savedChunks[chunk] = newValue; }
-
     function currentlyEditingUpdater(newValue) { currentlyEditing = newValue; }
+    function currentWordUpdater(newWord) { currentlyEditing.word = newWord; }
 
     function textsUpdater(newTexts) {
         texts = newTexts;
@@ -146,6 +134,8 @@
     }
 
     const textDeleter = textDeleterCreator(currentlyEditingUpdater, textsUpdater);
+    const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater);
+    const switchChunk = switchChunkCreator(currentChunkIdUpdater);
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -172,7 +162,7 @@
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
                                  on:select={selectSavedWord}
-                                 on:delete={savedWordDeleter(chunkUpdater, currentlyEditing, savedChunks, texts)}/>
+                                 on:delete={savedWordDeleter(currentlyEditing, savedChunks)}/>
         </div>
     </div>
 
@@ -191,7 +181,7 @@
 
                              on:requestCancelEdit={onCancelEdit}
                              on:saveChunk={onSaveChunk}
-                             on:changeChunk={({ detail }) => switchChunk(detail)}/>
+                             on:changeChunk={switchChunk(currentlyEditing, texts[currentlyEditing.textId])}/>
             {:else}
                 No text.
             {/if}
