@@ -5,16 +5,16 @@
 
     export let searchTerm;
 
-    let url = localStorage.getItem("dictionary") || '';
+    let url = JSON.parse(localStorage.getItem("dictionary") || '""');
     let open = true;
 
     function configureDict() {
         let newUrl = prompt("Enter a dict url!", "https://")
         if(!/\{\}/.test(newUrl))
-            alert("Can't accept this url because it doesn't contain a'{}' to replace the word with.");
+            alert("Can't accept this url because it doesn't contain a '{}' to replace the word with.");
         else {
             url = newUrl;
-            localStorage.setItem('dictionary', url);
+            localStorage.setItem('dictionary', JSON.stringify(url));
         }
     }
 
