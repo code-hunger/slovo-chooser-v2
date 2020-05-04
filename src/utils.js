@@ -143,3 +143,23 @@ export function retrieveSavedWords(title) {
   const saved = localStorage.getItem("chunks-" + md5(title));
   return saved ? JSON.parse(saved) : {};
 }
+
+export function savedWordDeleter(savedChunksUpdater, currentlyEditing, savedChunks, texts) {
+  console.log("savedWordDeleter called!");
+  return ({ detail: { chunk, word } }) => {
+    if(currentlyEditing.chunk == chunk && currentlyEditing.word == word)
+    {
+      if(!confirm("You're currently editing this word.\n" +
+        "Are you sure you want to delete it?"))
+        return;
+
+      currentlyEditing.word = null;
+    }
+    else if(!confirm("Wanna delete this word?")) {
+      return;
+    }
+
+    savedChunksUpdater(chunk, immutableSplice(savedChunks[chunk], word));
+    persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
+  };
+}

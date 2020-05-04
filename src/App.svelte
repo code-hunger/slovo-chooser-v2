@@ -4,7 +4,7 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv, { exportToFile } from "./exportToCSV.js"
-    import { persistSavedWords, retrieveSavedWords, immutableSplice } from "./utils.js"
+    import { persistSavedWords, retrieveSavedWords, savedWordDeleter } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -155,20 +155,7 @@
             texts = texts;
     }
 
-    function deleteSavedWord({ detail: { chunk, word } }) {
-        if(currentlyEditing.chunk == chunk && currentlyEditing.word == word)
-        {
-            if(!confirm("You're currently editing this word. Are you sure you want to delete it?"))
-                return;
-
-            currentlyEditing.word = null;
-        }
-        else if(!confirm("Wanna delete this word?"))
-            return;
-
-        savedChunks[chunk] = immutableSplice(savedChunks[chunk], word);
-        persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
-    }
+    function chunkUpdater(chunk, newValue) { savedChunks[chunk] = newValue; }
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -195,7 +182,7 @@
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
                                  on:select={selectSavedWord}
-                                 on:delete={deleteSavedWord}/>
+                                 on:delete={savedWordDeleter(chunkUpdater, currentlyEditing, savedChunks, texts)}/>
         </div>
     </div>
 
