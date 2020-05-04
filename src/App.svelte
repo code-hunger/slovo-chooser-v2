@@ -54,8 +54,7 @@
             return;
         }
 
-        texts = [...texts, [title, lines, 0]];
-        persistTexts(texts);
+        textsUpdater([...texts, [title, lines, 0]]);
 
         showTextAdder = false;
     }
