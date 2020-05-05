@@ -26,34 +26,39 @@
 
 <style type="text/css" media="screen">
     .form label { cursor: default; }
+
+    .column { background: inherit; }
 </style>
 
 {#if words}
-    <div class="ui form">
-        <div class="inline fields">
-            {#each (strategies) as strategy, i}
-                {#if strategy.viable}
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio"
-                                   name="context-strategy"
-                                   value={i}
-                                   bind:group={chosenStrategy}
-                                   id={"context-strategy-option-" + i} />
-                            <label for={"context-strategy-option-" + i}>{strategy.desc}</label>
+    <div class="seven wide column">
+        <div class="ui form">
+            <div class="grouped fields">
+                {#each (strategies) as strategy, i}
+                    {#if strategy.viable}
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio"
+                                       name="context-strategy"
+                                       value={i}
+                                       bind:group={chosenStrategy}
+                                       id={"context-strategy-option-" + i} />
+                                <label for={"context-strategy-option-" + i}>{strategy.desc}</label>
+                            </div>
                         </div>
-                    </div>
-                {/if}
-            {/each}
+                    {/if}
+                {/each}
+            </div>
         </div>
+    </div>
 
-        <!-- yeah it's bad to hard-code constants -->
-        {#if strategies[chosenStrategy].component}
+    {#if strategies[chosenStrategy].component}
+        <div class="nine wide column">
             <svelte:component
                 this={strategies[chosenStrategy].component}
                 {...strategies[chosenStrategy].properties} />
-        {/if}
-    </div>
+        </div>
+    {/if}
 {:else}
     No words :( So no context could be selected.
 {/if}

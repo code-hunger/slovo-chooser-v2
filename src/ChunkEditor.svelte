@@ -111,7 +111,7 @@
 </script>
 
 <style>
-    .column { background: #F9FbFb; }
+    .row, .column { background: #F9FbFb; }
     .form .translation {}
 </style>
 
@@ -119,11 +119,11 @@
 
 <div class="ui form">
 <div class="ui stackable celled grid">
-    <div class="sixteen wide tablet eleven wide computer column">
+    <div class="sixteen wide tablet ten wide computer column">
         <h3 class="ui header">Your text</h3>
         <WordCollector words={words} markedClass="unknown" on:wordClick={toggleUnknown} />
     </div>
-    <div class="sixteen wide tablet five wide computer column">
+    <div class="sixteen wide tablet six wide computer column">
         <h3 class="ui header">Marked words</h3>
         <WordCollector words={marked} markedClass="entered" on:wordClick={toggleEntered} />
 
@@ -165,10 +165,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="sixteen wide column">
-            <ContextStrategyChooser words={words} initialContext={initialContext} />
-        </div>
+    <div class="column row">
+        <ContextStrategyChooser words={words} initialContext={initialContext} />
     </div>
 
     <div class="column row centered">
