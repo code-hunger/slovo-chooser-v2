@@ -1,6 +1,7 @@
 <script>
     import PartialContextSelector from "./PartialContextSelector.svelte";
     import KeepContextSelector from "./KeepContextSelector.svelte";
+    import ManualContextSelector from "./ManualContextSelector.svelte"
 
     export let chosenStrategy = 2, words, initialContext = '';
 
@@ -20,6 +21,12 @@
             viable: true,
             component: PartialContextSelector,
             properties: { words }
+        },
+        {
+            desc: "Manually select context",
+            viable: true,
+            component: ManualContextSelector,
+            properties: { context: initialContext }
         }
     ];
 </script>
