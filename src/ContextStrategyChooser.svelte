@@ -3,7 +3,9 @@
     import KeepContextSelector from "./KeepContextSelector.svelte";
     import ManualContextSelector from "./ManualContextSelector.svelte"
 
-    export let chosenStrategy = 2, words, initialContext = '', selectedContext;
+    export let chosenStrategy, words, initialContext = '', selectedContext;
+
+    $: chosenStrategy = (!initialContext && 3 || 0);
 
     $: strategies = [
         {
@@ -11,7 +13,7 @@
             viable: initialContext && initialContext.length > 0,
             component: KeepContextSelector,
             properties: { initialContext },
-            activate() { selectedContext = initialContext; }
+            activate() {}
         },
         {
             desc: 'Empty context',
