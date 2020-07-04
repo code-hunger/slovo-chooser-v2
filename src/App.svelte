@@ -87,18 +87,20 @@
         persistTexts(texts);
     }
 
-    function currentlyEditingUpdater(newValue) { currentlyEditing = newValue; }
-    function currentWordUpdater(newWord) { currentlyEditing.word = newWord; }
+    function resetCurrentlyEditing() {
+        currentlyEditing = { textId: null, chunk: null, word: null }
+    }
+    function resetCurrentWord() { currentlyEditing.word = null; }
 
     function textsUpdater(newTexts) {
         texts = newTexts;
         persistTexts(texts);
     }
 
-    const textDeleter = textDeleterCreator(currentlyEditingUpdater, textsUpdater);
-    const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater);
+    const textDeleter = textDeleterCreator(resetCurrentlyEditing, textsUpdater);
+    const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, resetCurrentWord);
     const switchChunk = switchChunkCreator(currentChunkIdUpdater);
-    const onSaveChunk = onSaveChunkCreator(currentWordUpdater, currentSavedChunksUpdater);
+    const onSaveChunk = onSaveChunkCreator(resetCurrentWord, currentSavedChunksUpdater);
     const download = () => downloadSavedWords(texts[currentlyEditing.textId][0], savedChunks)
 </script>
 

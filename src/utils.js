@@ -157,7 +157,7 @@ export function retrieveSavedWords(title) {
   return saved ? JSON.parse(saved) : {};
 }
 
-export function textDeleterCreator(currentlyEditingUpdater, textsUpdater) {
+export function textDeleterCreator(resetCurrentlyEditing, textsUpdater) {
   return (currentTextId, texts) => ({ detail }) => {
     const i = detail; // the text id to delete
 
@@ -167,12 +167,11 @@ export function textDeleterCreator(currentlyEditingUpdater, textsUpdater) {
     localStorage.removeItem("chunks-" + md5(texts[i][0]));
     textsUpdater(immutableSplice(texts, i));
 
-    if(currentTextId == i)
-      currentlyEditingUpdater({ textId: null, chunk: null, word: null })
+    if(currentTextId == i) resetCurrentlyEditing()
   }
 }
 
-export function savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater) {
+export function savedWordDeleterCreator(savedChunksUpdater, resetCurrentWord) {
   return (currentlyEditing, savedChunks) => ({ detail: { chunk, word } }) => {
     if(currentlyEditing.chunk == chunk && currentlyEditing.word == word)
     {
@@ -180,7 +179,7 @@ export function savedWordDeleterCreator(savedChunksUpdater, currentWordUpdater) 
         "Are you sure you want to delete it?"))
         return;
 
-      currentWordUpdater(null);
+      resetCurrentWord();
     }
     else if(!confirm("Wanna delete this word?")) {
       return;
@@ -213,13 +212,13 @@ export function switchChunkCreator(currentChunkIdUpdater) {
   }
 }
 
-export function onSaveChunkCreator(currentWordUpdater, savedChunksUpdater) {
+export function onSaveChunkCreator(resetCurrentWord, savedChunksUpdater) {
   return (currentlyEditingWord, currentChunkSaved = []) => ({ detail }) => {
     if(currentlyEditingWord == null) {
       savedChunksUpdater([...currentChunkSaved, detail]);
     } else {
       savedChunksUpdater(immutableArrayUpdate(currentChunkSaved, currentlyEditingWord, detail));
-      currentWordUpdater(null);
+      resetCurrentWord();
     }
   }
 }
