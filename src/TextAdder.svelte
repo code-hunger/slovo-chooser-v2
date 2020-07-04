@@ -10,29 +10,25 @@
     const splitStrategies = [
         {
             description: 'Each line is a separate chunk.',
-            action: function () {
-                return greatText.split(/\n+/g);
-            }
+            action: bigText => bigText.split(/\n+/g)
         },
         {
             description: 'A chunk is a single sentence ending in any of ".", "!" or "?".',
-            action: function() {
-                return greatText.split(/([.!?]+)/g)
+            action: bigText => bigText.split(/([.!?]+)/g)
                 // The reduce now will bring the ending punctuation back to each sentence.
-                    .reduce((arr, next, i) => {
-                        if(i % 2 == 0) {
-                            arr.push(next); // Oh that hurts
-                            return arr;
-                        }
-                        arr[arr.length-1] += next;
+                .reduce((arr, next, i) => {
+                    if(i % 2 == 0) {
+                        arr.push(next); // Oh that hurts
                         return arr;
-                    }, []);
-            }
+                    }
+                    arr[arr.length-1] += next;
+                    return arr;
+                }, [])
         }
     ];
 
     function submit() {
-        let lines = splitStrategies[splitStrategy].action();
+        let lines = splitStrategies[splitStrategy].action(greatText);
         lines = joinIfShorter ? normalizeLines(lines, joinIfShorterThan) : lines;
 
         if(lines.length == 0) {
