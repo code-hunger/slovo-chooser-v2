@@ -45,4 +45,4 @@
 </style>
 
 <div id="context-strategy-slider"></div>
-{words.slice(chosenEnds.start, chosenEnds.end).map(w => w.word).join(' ')}
+<textarea readonly rows=3>{selectedContext}</textarea>
