@@ -122,6 +122,7 @@ export function normalizeLines(lines, joinIfShorterThan) {
           } else {
             lines[i] += " " + accumulator;
           }
+          accumulator = "";
         }
       } else {
         // No accumulator, everything's fine
