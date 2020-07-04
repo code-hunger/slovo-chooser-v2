@@ -8,14 +8,17 @@
         splitStrategy = 0, joinIfShorter = true, joinIfShorterThan = 30;
 
     const splitStrategies = [
-        [ 'Each line is a separate chunk.',
-            function () {
+        {
+            description: 'Each line is a separate chunk.',
+            action: function () {
                 return greatText.split(/\n+/g);
             }
-        ], ['A chunk is a single sentence ending in any of ".", "!" or "?".',
-            function() {
+        },
+        {
+            description: 'A chunk is a single sentence ending in any of ".", "!" or "?".',
+            action: function() {
                 return greatText.split(/([.!?]+)/g)
-                    // The reduce now will bring the ending punctuation back to each sentence.
+                // The reduce now will bring the ending punctuation back to each sentence.
                     .reduce((arr, next, i) => {
                         if(i % 2 == 0) {
                             arr.push(next); // Oh that hurts
@@ -25,11 +28,11 @@
                         return arr;
                     }, []);
             }
-        ]
+        }
     ];
 
     function submit() {
-        let lines = splitStrategies[splitStrategy][1]();
+        let lines = splitStrategies[splitStrategy].action();
         lines = joinIfShorter ? normalizeLines(lines, joinIfShorterThan) : lines;
 
         if(lines.length == 0) {
@@ -75,7 +78,7 @@
                            value={i}
                            bind:group={splitStrategy}
                            id={"strategy-option-" + i} />
-                    <label for={"strategy-option-" + i}>{strategy[0]}</label>
+                    <label for={"strategy-option-" + i}>{strategy.description}</label>
                 </div>
             </div>
         {/each}
