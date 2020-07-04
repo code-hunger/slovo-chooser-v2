@@ -1,5 +1,5 @@
 <script>
-    export let context = "";
+    export let selectedContext = "";
 </script>
 
-<input bind:value={context} />
+<input bind:value={selectedContext} />

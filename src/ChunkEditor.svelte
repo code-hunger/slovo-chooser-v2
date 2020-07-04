@@ -7,7 +7,7 @@
     import ContextStrategyChooser from "./ContextStrategyChooser.svelte";
     import _ from "lodash"
 
-    export let chunkText, initialInput = null, initialTranslation = null, initialContext = null;
+    export let chunkText, initialInput = '', initialTranslation = '', initialContext = '';
 
     const dispatch = createEventDispatcher();
 
@@ -21,6 +21,8 @@
 
     $: marked = (chunkText, []);
     $: dictionaryWord = (chunkText, '');
+
+    let selectedContext = '';
 
     const saveConditions = [
         [ () => inputValue != '' , 'No input entered!' ],
@@ -76,7 +78,7 @@
         dispatch("saveChunk", {
             input: inputValue,
             translation: translationValue,
-            context: emphasizeWordInStr(chunkText, inputValue)
+            context: emphasizeWordInStr(selectedContext, inputValue)
         });
 
         inputValue = ''
@@ -166,7 +168,7 @@
     </div>
 
     <div class="column row">
-        <ContextStrategyChooser words={words} initialContext={initialContext} />
+        <ContextStrategyChooser words={words} initialContext={initialContext} bind:selectedContext />
     </div>
 
     <div class="column row centered">

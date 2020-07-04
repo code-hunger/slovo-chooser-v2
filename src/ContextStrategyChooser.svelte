@@ -3,30 +3,39 @@
     import KeepContextSelector from "./KeepContextSelector.svelte";
     import ManualContextSelector from "./ManualContextSelector.svelte"
 
-    export let chosenStrategy = 2, words, initialContext = '';
+    export let chosenStrategy = 2, words, initialContext = '', selectedContext;
 
     $: strategies = [
         {
             desc: "Keep same (no changes)",
             viable: initialContext && initialContext.length > 0,
             component: KeepContextSelector,
-            properties: { initialContext }
+            properties: { initialContext },
+            activate() { selectedContext = initialContext; }
+        },
+        {
+            desc: 'Empty context',
+            viable: true,
+            activate() { selectedContext = ''; }
         },
         {
             desc: 'Use the whole chunk as a context',
-            viable: true
+            viable: true,
+            activate() { selectedContext = words.map(w => w.word).join(' ') }
         },
         {
             desc:'Choose only part of the chunk to use as a context.',
             viable: true,
             component: PartialContextSelector,
-            properties: { words }
+            properties: { words, selectedContext },
+            activate() {}
         },
         {
             desc: "Manually select context",
             viable: true,
             component: ManualContextSelector,
-            properties: { context: initialContext }
+            properties: {},
+            activate() {}
         }
     ];
 </script>
@@ -49,6 +58,7 @@
                                        name="context-strategy"
                                        value={i}
                                        bind:group={chosenStrategy}
+                                       on:change={strategy.activate}
                                        id={"context-strategy-option-" + i} />
                                 <label for={"context-strategy-option-" + i}>{strategy.desc}</label>
                             </div>
@@ -63,6 +73,7 @@
         <div class="nine wide column">
             <svelte:component
                 this={strategies[chosenStrategy].component}
+                bind:selectedContext
                 {...strategies[chosenStrategy].properties} />
         </div>
     {/if}
