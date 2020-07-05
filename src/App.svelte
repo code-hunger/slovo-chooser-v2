@@ -5,6 +5,7 @@
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv from "./exportToCSV.js"
     import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator, downloadSavedWords, exportState } from "./utils.js"
+    import chunkStore from "./chunksStore.js"
     import md5 from "md5";
     import _ from "lodash"
 
@@ -18,10 +19,11 @@
         word: null
     }
 
-    $: savedChunks = currentlyEditing.textId != null && retrieveSavedWords(texts[currentlyEditing.textId][0]) || {};
+    $: if(currentlyEditing.textId != null)
+        chunkStore.set(retrieveSavedWords(texts[currentlyEditing.textId][0]) || {});
 
     $: initial = currentlyEditing.chunk != null && currentlyEditing.word != null
-        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word]
+        ? $chunkStore[currentlyEditing.chunk][currentlyEditing.word]
         : null
 
     function onCancelEdit() {
@@ -41,7 +43,7 @@
             }
         }
 
-        // `detail.chunk` comes as a key from savedChunks and hence is a String,
+        // `detail.chunk` comes as a key from chunkStore and hence is a String,
         // which makes further integer operations behave badly ('14' + 1 = 141 :/)
         currentlyEditing.chunk = parseInt(detail.chunk);
         currentlyEditing.word = detail.word;
@@ -75,8 +77,8 @@
     }
 
     function savedChunksUpdater(chunk, newValue) {
-        savedChunks[chunk] = newValue;
-        persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
+        $chunkStore[chunk] = newValue;
+        persistSavedWords(texts[currentlyEditing.textId][0], $chunkStore);
     }
     function currentSavedChunksUpdater(newValue) {
         savedChunksUpdater(currentlyEditing.chunk, newValue);
@@ -103,7 +105,7 @@
     const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, resetCurrentWord);
     const switchChunk = switchChunkCreator(currentChunkIdUpdater);
     const onSaveChunk = onSaveChunkCreator(resetCurrentWord, currentSavedChunksUpdater);
-    const download = () => downloadSavedWords(texts[currentlyEditing.textId][0], savedChunks)
+    const download = () => downloadSavedWords(texts[currentlyEditing.textId][0], $chunkStore)
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -128,9 +130,9 @@
                           on:delete={textDeleter(currentlyEditing.textId, texts)} />
 
         <div class="centered column row">
-            <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
+            <SavedWordsContainer active={currentlyEditing}
                                  on:select={selectSavedWord}
-                                 on:delete={savedWordDeleter(currentlyEditing, savedChunks)}/>
+                                 on:delete={savedWordDeleter(currentlyEditing, $chunkStore)}/>
         </div>
     </div>
 
@@ -147,7 +149,7 @@
                              {initial}
 
                              on:requestCancelEdit={onCancelEdit}
-                             on:saveChunk={onSaveChunk(currentlyEditing.word, savedChunks[currentlyEditing.chunk])}
+                             on:saveChunk={onSaveChunk(currentlyEditing.word, $chunkStore[currentlyEditing.chunk])}
                              on:changeChunk={switchChunk(currentlyEditing, texts[currentlyEditing.textId])}/>
             {:else}
                 No text.

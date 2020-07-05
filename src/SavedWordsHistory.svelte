@@ -2,12 +2,13 @@
     import _ from "lodash"
     import { createEventDispatcher } from 'svelte';
     import DeletableItem from "./DeletableItem.svelte"
+    import chunkStore from "./chunksStore.js"
 
     const dispatch = createEventDispatcher();
 
-    export let chunks, active;
+    export let active;
 
-    $: numberOfWords = _.reduce(chunks, (acc, val) => acc + val.length, 0)
+    $: numberOfWords = _.reduce($chunkStore, (acc, val) => acc + val.length, 0)
 
     function makeDispatcher (name, chunk, word) {
         return () => dispatch(name, {chunk, word});
@@ -30,8 +31,8 @@
 {#if numberOfWords}
     Saved ({numberOfWords}):
     <div class="ui bulleted list saved-words">
-        {#each Object.keys(chunks) as chunkId}
-            {#each chunks[chunkId] as savedWord, i}
+        {#each Object.keys($chunkStore) as chunkId}
+            {#each $chunkStore[chunkId] as savedWord, i}
                 <DeletableItem on:click={makeDispatcher('select', chunkId, i)}
                                on:delete={makeDispatcher('delete', chunkId, i)}>
                     <div class="saved-word"
