@@ -1,6 +1,7 @@
 <script>
     import WordCollector from "./WordCollector.svelte";
     import DictionaryView from "./DictionaryView.svelte"
+    import InputSearchWord from "./InputSearchWord.svelte"
     import update from "immutability-helper"
     import { tick, createEventDispatcher } from 'svelte';
     import { arrayToggle, wordToggleMark, wordUnmark, containsWord, smartToggleSubstring, smartRemoveFromString, trimPunctuation, emphasizeWordInStr, inferEnteredFromInput, updateMarkedFromInput } from "./utils.js"
@@ -51,14 +52,7 @@
         marked = updateMarkedFromInput(marked, inputValue);
     }
 
-    function applySearch() {
-        inputValue = trimPunctuation(inputValue);
-        dictionaryWord = inputValue
-    }
-
-    function clearInput() {
-        inputValue = '';
-    }
+    function applySearch() { dictionaryWord = inputValue }
 
     function checkSubmitConditions() {
         for(let cond of saveConditions)
@@ -109,9 +103,6 @@
         if(altKey && key == 'p')
             switchChunk(-1);
     }
-
-    function searchLowercase() { inputValue = inputValue.toLowerCase(); }
-    function searchBackspace() { inputValue = inputValue.slice(0, -1); }
 </script>
 
 <style>
@@ -132,24 +123,7 @@
         <WordCollector words={marked} markedClass="entered" on:wordClick={toggleEntered} />
 
         <div class="segment">
-            {#if initialInput}
-                <label>Currently editing: <i>{initialInput}</i></label>
-            {/if}
-            <div>
-                <a href="#" on:click={searchLowercase}><i class="arrow alternate circle down outline icon" /></a>
-                <a href="#" on:click={searchBackspace}><i class="arrow alternate circle left outline icon" /></a>
-            </div>
-            <div class="ui action icon input">
-                <input type="text"
-                       placeholder="Search words"
-                       bind:value={inputValue}
-                       on:keyup={inputKeyup}
-                       on:keydown={e => {if(e.keyCode == 13) applySearch()}} />
-                <i class="close link icon" on:click={clearInput}></i>
-                <button class="ui icon button" on:click={applySearch}>
-                    <i class="search icon" />
-                </button>
-            </div>
+            <InputSearchWord bind:inputValue bind:initialInput on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
         </div>
     </div>
 
