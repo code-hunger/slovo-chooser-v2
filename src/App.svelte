@@ -47,7 +47,9 @@
             }
         }
 
-        currentlyEditing.chunk = detail.chunk;
+        // `detail.chunk` comes as a key from savedChunks and hence is a String,
+        // which makes further integer operations behave badly ('14' + 1 = 141 :/)
+        currentlyEditing.chunk = parseInt(detail.chunk);
         currentlyEditing.word = detail.word;
     }
 
@@ -63,6 +65,12 @@
     }
 
     function selectText(i) {
+        if(!Number.isFinite(i)) {
+            alert("The selected 'thing' is not an id of a text: ", i);
+            console.log("This is not an id of a text: ", i);
+            return;
+        }
+
         if(currentlyEditing.word != null) {
             alert("A word is currently being edited!")
             return
