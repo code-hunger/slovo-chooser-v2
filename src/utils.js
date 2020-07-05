@@ -39,7 +39,8 @@ const trailingPunctuation = RegExp(
 );
 
 export function trimPunctuation(str) {
-  return str.replace(trailingPunctuation, "");
+  // Twice - to trim both ends. 'replaceAll' is not quite supported yet ;/
+  return str.replace(trailingPunctuation, "").replace(trailingPunctuation, "");
 }
 
 export function makeWordPresenceRegex(word) {
