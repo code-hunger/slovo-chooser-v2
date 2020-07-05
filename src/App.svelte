@@ -20,14 +20,8 @@
 
     $: savedChunks = currentlyEditing.textId != null && retrieveSavedWords(texts[currentlyEditing.textId][0]) || {};
 
-    $: initialInput = currentlyEditing.chunk != null && currentlyEditing.word != null
-        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word].input
-        : null
-    $: initialTranslation = currentlyEditing.chunk != null && currentlyEditing.word != null
-        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word].translation
-        : null
-    $: initialContext = currentlyEditing.chunk != null && currentlyEditing.word != null
-        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word].context
+    $: initial = currentlyEditing.chunk != null && currentlyEditing.word != null
+        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word]
         : null
 
     function onCancelEdit() {
@@ -42,7 +36,7 @@
         }
 
         if(currentlyEditing.chunk != null && currentlyEditing.word != null) {
-            if(!confirm("You're currently editing '" + initialInput + "'. Discard?")) {
+            if(!confirm("You're currently editing '" + initial.input + "'. Discard?")) {
                 return;
             }
         }
@@ -150,9 +144,7 @@
         <div class="row">
             {#if currentlyEditing.textId != null}
                 <ChunkEditor chunkText={texts[currentlyEditing.textId][1][currentlyEditing.chunk]}
-                             initialInput={initialInput}
-                             initialTranslation={initialTranslation}
-                             initialContext={initialContext}
+                             {initial}
 
                              on:requestCancelEdit={onCancelEdit}
                              on:saveChunk={onSaveChunk(currentlyEditing.word, savedChunks[currentlyEditing.chunk])}

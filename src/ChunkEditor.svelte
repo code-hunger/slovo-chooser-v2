@@ -8,7 +8,7 @@
     import ContextStrategyChooser from "./ContextStrategyChooser.svelte";
     import _ from "lodash"
 
-    export let chunkText, initialInput = '', initialTranslation = '', initialContext = '';
+    export let chunkText, initial = { input: '', translation: '', context: '' };
 
     const dispatch = createEventDispatcher();
 
@@ -17,8 +17,8 @@
         .filter(w => trimPunctuation(w) != '')
         .map(w => ({ word: w, marked: false  }));
 
-    $: inputValue = (chunkText, initialInput || '');
-    $: translationValue = (chunkText, initialTranslation || '');
+    $: inputValue = (chunkText, initial && initial.input || '');
+    $: translationValue = (chunkText, initial && initial.translation || '');
 
     $: marked = (chunkText, []);
     $: dictionaryWord = (chunkText, '');
@@ -123,7 +123,7 @@
         <WordCollector words={marked} markedClass="entered" on:wordClick={toggleEntered} />
 
         <div class="segment">
-            <InputSearchWord bind:inputValue {initialInput} on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
+            <InputSearchWord bind:inputValue initialInput={initial && initial.input} on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
         </div>
     </div>
 
@@ -148,13 +148,13 @@
     </div>
 
     <div class="column row">
-        <ContextStrategyChooser words={words} initialContext={initialContext} bind:selectedContext />
+        <ContextStrategyChooser words={words} initialContext={initial && initial.context} bind:selectedContext />
     </div>
 
     <div class="column row centered">
-        {#if initialInput}
+        {#if initial && initial.input}
             <button class="ui button" on:click={submit}>Update it!</button>
-            <button class="ui button" on:click={cancelEdit}>Cancel editing "{initialInput}"</button>
+            <button class="ui button" on:click={cancelEdit}>Cancel editing "{initial.input}"</button>
         {:else}
             <button class="ui button" on:click={goPrev}>«</button>
             <button class="ui button" on:click={submit}>Add word</button>
