@@ -110,6 +110,8 @@
             switchChunk(-1);
     }
 
+    function searchLowercase() { inputValue = inputValue.toLowerCase(); }
+    function searchBackspace() { inputValue = inputValue.slice(0, -1); }
 </script>
 
 <style>
@@ -133,16 +135,20 @@
             {#if initialInput}
                 <label>Currently editing: <i>{initialInput}</i></label>
             {/if}
+            <div>
+                <a href="#" on:click={searchLowercase}><i class="arrow alternate circle down outline icon" /></a>
+                <a href="#" on:click={searchBackspace}><i class="arrow alternate circle left outline icon" /></a>
+            </div>
             <div class="ui action icon input">
                 <input type="text"
                        placeholder="Search words"
                        bind:value={inputValue}
                        on:keyup={inputKeyup}
                        on:keydown={e => {if(e.keyCode == 13) applySearch()}} />
-                       <i class="close link icon" on:click={clearInput}></i>
-                       <button class="ui icon button" on:click={applySearch}>
-                           <i class="search icon" />
-                       </button>
+                <i class="close link icon" on:click={clearInput}></i>
+                <button class="ui icon button" on:click={applySearch}>
+                    <i class="search icon" />
+                </button>
             </div>
         </div>
     </div>
