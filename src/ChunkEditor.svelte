@@ -123,7 +123,7 @@
         <WordCollector words={marked} markedClass="entered" on:wordClick={toggleEntered} />
 
         <div class="segment">
-            <InputSearchWord bind:inputValue bind:initialInput on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
+            <InputSearchWord bind:inputValue {initialInput} on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
         </div>
     </div>
 
