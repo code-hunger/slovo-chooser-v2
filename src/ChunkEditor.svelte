@@ -8,6 +8,8 @@
     import ContextStrategyChooser from "./ContextStrategyChooser.svelte";
     import _ from "lodash"
 
+	import { slide } from 'svelte/transition';
+
     export let chunkText, initial = { input: '', translation: '', context: '' };
 
     const dispatch = createEventDispatcher();
@@ -22,6 +24,8 @@
 
     $: marked = (chunkText, []);
     $: dictionaryWord = (chunkText, '');
+
+    $: showContextSelector = showContextSelector || (inputValue && translationValue);
 
     let selectedContext = '';
 
@@ -78,6 +82,7 @@
         inputValue = ''
         dictionaryWord = ''
         translationValue = ''
+        showContextSelector = false;
     }
 
     function switchChunk(dir) {
@@ -86,6 +91,7 @@
         dictionaryWord = ''
         translationValue = ''
         dispatch("changeChunk", dir);
+        showContextSelector = false;
     }
 
     function goPrev() { switchChunk(-1); }
@@ -95,6 +101,7 @@
         dispatch("requestCancelEdit");
         await tick();
         marked = updateMarkedFromInput(marked, inputValue);
+        showContextSelector = false;
     }
 
     function fireCombo(key, altKey) {
@@ -147,9 +154,12 @@
         </div>
     </div>
 
-    <div class="column row">
-        <ContextStrategyChooser words={words} initialContext={initial && initial.context} bind:selectedContext />
-    </div>
+    <!-- No need to show the context selector before selecting a word and a translation -->
+    {#if showContextSelector}
+        <div class="column row" transition:slide={{delay: 1000}}>
+            <ContextStrategyChooser words={words} initialContext={initial && initial.context} bind:selectedContext />
+        </div>
+    {/if}
 
     <div class="column row centered">
         {#if initial && initial.input}
