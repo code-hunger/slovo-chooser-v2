@@ -44,7 +44,7 @@ export function trimPunctuation(str) {
 }
 
 export function makeWordPresenceRegex(word) {
-  const bounadry = "(?:\\P{L}|^|$)"; // unlike \\b, works properly no non-ascii chars
+  const bounadry = "(?:(?=\\P{L})|(?<=\\P{L})|^|$)"; // unlike \\b, works properly no non-ascii chars
 
   return XRegExp(bounadry + _.escapeRegExp(trimPunctuation(word)) + bounadry, "i");
 }
@@ -86,7 +86,7 @@ export function emphasizeWordInStr(str, word) {
 
   if (!presence) return str;
 
-  const before = str.slice(0, presence.index - 1);
+  const before = str.slice(0, presence.index) || "";
   const matchedWord = str.slice(
     presence.index,
     presence.index + presence[0].length
