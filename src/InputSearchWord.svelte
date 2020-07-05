@@ -23,11 +23,8 @@
 </script>
 
 <style>
-    .input input.myinput:not(.notsearched) {
+    .input input.myinput.was-searched {
         color: darkgreen;
-    }
-    .input input.myinput.notsearched {
-        color: #22A;
     }
 </style>
 
@@ -47,7 +44,7 @@
     <input type="text"
            placeholder="Search words"
            class="myinput"
-           class:notsearched={!wasSearched}
+           class:was-searched={wasSearched}
            bind:value={inputValue}
            on:keyup={e => dispatch('inputKeyup', e)}
            on:keydown={e => {if(e.keyCode == 13) applySearch()}} />
