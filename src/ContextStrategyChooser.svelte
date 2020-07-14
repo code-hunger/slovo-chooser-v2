@@ -1,7 +1,7 @@
 <script>
-    import PartialContextSelector from "./PartialContextSelector.svelte";
-    import KeepContextSelector from "./KeepContextSelector.svelte";
-    import ManualContextSelector from "./ManualContextSelector.svelte"
+    import PartialContextSelector from "./ContextSelectors/PartialContextSelector.svelte";
+    import KeepContextSelector from "./ContextSelectors/KeepContextSelector.svelte";
+    import ManualContextSelector from "./ContextSelectors/ManualContextSelector.svelte"
 
     export let chosenStrategy, words, initialContext = '', selectedContext;
 
