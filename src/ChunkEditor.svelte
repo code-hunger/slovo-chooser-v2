@@ -35,20 +35,20 @@
         [ () => translationValue != '', 'no translation entered' ]
     ]
 
-    function toggleUnknown({ detail }) {
-        if(words[detail.i].marked)
-            inputValue = smartRemoveFromString(inputValue, detail.word.word)
+    function toggleUnknown(i, word) {
+        if(words[i].marked)
+            inputValue = smartRemoveFromString(inputValue, word)
         else
             if(trimPunctuation(inputValue) == "")
-                inputValue = detail.word.word;
+                inputValue = word;
 
-        words[detail.i] = wordToggleMark(words[detail.i]);
-        marked = arrayToggle(marked, wordUnmark(words[detail.i]));
+        words[i] = wordToggleMark(words[i]);
+        marked = arrayToggle(marked, wordUnmark(words[i]));
         marked = updateMarkedFromInput(marked, inputValue);
     }
 
-    function toggleEntered({ detail: { word } }) {
-        inputValue = smartToggleSubstring(inputValue, word.word);
+    function toggleEntered(word) {
+        inputValue = smartToggleSubstring(inputValue, word);
         marked = updateMarkedFromInput(marked, inputValue);
     }
 
@@ -123,11 +123,11 @@
 <div class="ui stackable celled grid">
     <div class="sixteen wide tablet ten wide computer column">
         <h3 class="ui header">Your text</h3>
-        <WordCollector words={words} markedClass="unknown" on:wordClick={toggleUnknown} />
+        <WordCollector words={words} markedClass="unknown" on:wordClick={e => toggleUnknown(e.detail.i, e.detail.word.word)} />
     </div>
     <div class="sixteen wide tablet six wide computer column">
         <h3 class="ui header">Marked words</h3>
-        <WordCollector words={marked} markedClass="entered" on:wordClick={toggleEntered} />
+        <WordCollector words={marked} markedClass="entered" on:wordClick={e => toggleEntered(e.detail.word.word)} />
 
         <div class="segment">
             <InputSearchWord bind:inputValue initialInput={initial && initial.input} on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
