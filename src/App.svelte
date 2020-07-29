@@ -12,30 +12,28 @@
 
     let showTextAdder = texts.length == 0;
 
-    let currentlyEditing = {
-        textId: null,
-        chunk: null,
-        word: null
+    let activeWord = null, activeChunk = null, activeTextId = null;
+
     }
 
-    $: savedChunks = currentlyEditing.textId != null && retrieveSavedWords(texts[currentlyEditing.textId][0]) || {};
+    $: savedChunks = activeTextId != null && retrieveSavedWords(texts[activeTextId][0]) || {};
 
-    $: initial = currentlyEditing.chunk != null && currentlyEditing.word != null
-        ? savedChunks[currentlyEditing.chunk][currentlyEditing.word]
+    $: initial = activeChunk != null && activeWord != null
+        ? savedChunks[activeChunk][activeWord]
         : null
 
     function onCancelEdit() {
         if(confirm("Cancel edit?"))
-            currentlyEditing.word = null;
+            activeWord = null;
     }
 
     function selectSavedWord({ detail }) {
-        if(currentlyEditing.chunk == detail.chunk && currentlyEditing.word == detail.word) {
+        if(activeChunk == detail.chunk && activeWord == detail.word) {
             alert("You're currently editing this word.");
             return;
         }
 
-        if(currentlyEditing.chunk != null && currentlyEditing.word != null) {
+        if(activeChunk != null && activeWord != null) {
             if(!confirm("You're currently editing '" + initial.input + "'. Discard?")) {
                 return;
             }
@@ -43,8 +41,8 @@
 
         // `detail.chunk` comes as a key from savedChunks and hence is a String,
         // which makes further integer operations behave badly ('14' + 1 = 141 :/)
-        currentlyEditing.chunk = parseInt(detail.chunk);
-        currentlyEditing.word = detail.word;
+        activeChunk = parseInt(detail.chunk);
+        activeWord = detail.word;
     }
 
     function addText({ detail: { title, lines } }) {
@@ -65,34 +63,32 @@
             return;
         }
 
-        if(currentlyEditing.word != null) {
+        if(activeWord != null) {
             alert("A word is currently being edited!")
             return
         }
 
-        currentlyEditing.textId = i;
-        currentlyEditing.chunk = parseInt(texts[i][2] || 0);
+        activeTextId = i;
+        activeChunk = parseInt(texts[i][2] || 0);
     }
 
     function savedChunksUpdater(chunk, newValue) {
         savedChunks[chunk] = newValue;
-        persistSavedWords(texts[currentlyEditing.textId][0], savedChunks);
+        persistSavedWords(texts[activeTextId][0], savedChunks);
     }
     function currentSavedChunksUpdater(newValue) {
-        savedChunksUpdater(currentlyEditing.chunk, newValue);
+        savedChunksUpdater(activeChunk, newValue);
     }
 
     function currentChunkIdUpdater(newChunkId) {
         if(typeof newChunkId !== "number") { alert("Internall type error!") }
-        currentlyEditing.chunk = newChunkId;
-        texts[currentlyEditing.textId][2] = newChunkId;
+        activeChunk = newChunkId;
+        texts[activeTextId][2] = newChunkId;
         persistTexts(texts);
     }
 
-    function resetCurrentlyEditing() {
-        currentlyEditing = { textId: null, chunk: null, word: null }
-    }
-    function resetCurrentWord() { currentlyEditing.word = null; }
+    function resetCurrentlyEditing() { activeChunk = activeWord = activeTextId = null; }
+    function resetCurrentWord() { activeWord = null; }
 
     function textsUpdater(newTexts) {
         texts = newTexts;
@@ -103,7 +99,7 @@
     const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, resetCurrentWord);
     const switchChunk = switchChunkCreator(currentChunkIdUpdater);
     const onSaveChunk = onSaveChunkCreator(resetCurrentWord, currentSavedChunksUpdater);
-    const download = () => downloadSavedWords(texts[currentlyEditing.textId][0], savedChunks)
+    const download = () => downloadSavedWords(texts[activeTextId][0], savedChunks)
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -123,16 +119,16 @@
             </a>
         {/if}
 
-        <TextSourceSelect currentId={currentlyEditing.textId} {texts}
+        <TextSourceSelect currentId={activeTextId} {texts}
                           on:select={({ detail }) => selectText(detail)}
-                          on:delete={textDeleter(currentlyEditing.textId, texts)} />
+                          on:delete={textDeleter(activeTextId, texts)} />
 
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks}
-                                 activeChunk={currentlyEditing.chunk}
-                                 activeWord={currentlyEditing.word}
+                                 activeChunk={activeChunk}
+                                 activeWord={activeWord}
                                  on:select={selectSavedWord}
-                                 on:delete={savedWordDeleter(currentlyEditing.chunk, currentlyEditing.word, savedChunks)}/>
+                                 on:delete={savedWordDeleter(activeChunk, activeWord, savedChunks)}/>
         </div>
     </div>
 
@@ -144,13 +140,13 @@
         {/if}
 
         <div class="row">
-            {#if currentlyEditing.textId != null}
-                <ChunkEditor chunkText={texts[currentlyEditing.textId][1][currentlyEditing.chunk]}
+            {#if activeTextId != null}
+                <ChunkEditor chunkText={texts[activeTextId][1][activeChunk]}
                              {initial}
 
                              on:requestCancelEdit={onCancelEdit}
-                             on:saveChunk={onSaveChunk(currentlyEditing.word, savedChunks[currentlyEditing.chunk])}
-                             on:changeChunk={switchChunk(currentlyEditing.chunk, currentlyEditing.word, texts[currentlyEditing.textId])}/>
+                             on:saveChunk={onSaveChunk(activeWord, savedChunks[activeChunk])}
+                             on:changeChunk={switchChunk(activeChunk, activeWord, texts[activeTextId])}/>
             {:else}
                 No text.
             {/if}
