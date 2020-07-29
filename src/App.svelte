@@ -3,6 +3,7 @@
     import SavedWordsContainer from "./SavedWordsHistory.svelte"
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
+    import MarkedWordsList from "./MarkedWordsList.svelte"
     import exportToCsv from "./exportToCSV.js"
     import allMarked from "./markedWords.js"
     import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator, downloadSavedWords, exportState } from "./utils.js"
@@ -137,6 +138,10 @@
         <TextSourceSelect currentId={activeTextId} {texts}
                           on:select={({ detail }) => selectText(detail)}
                           on:delete={textDeleter(activeTextId, texts)} />
+
+        <div class="centered column row">
+            <MarkedWordsList marked={$allMarked[activeTextId]} />
+        </div>
 
         <div class="centered column row">
             <SavedWordsContainer chunks={savedChunks}
