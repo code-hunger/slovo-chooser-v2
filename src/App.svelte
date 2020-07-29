@@ -15,12 +15,14 @@
 
     let activeWord = null, activeChunk = null, activeTextId = null;
 
-    $: allMarked.updateCurrent(activeChunk, currentMarked);
-    $: currentMarked = recalcCurrentMarked(activeChunk);
+    $: allMarked.updateCurrent(activeTextId, activeChunk, currentMarked);
+    $: currentMarked = recalcCurrentMarked(activeTextId, activeChunk);
 
-    function recalcCurrentMarked (chunk) {
-        return $allMarked[activeChunk] || [];
+    function recalcCurrentMarked (text, chunk) {
+        return ($allMarked[text] && $allMarked[text][chunk]) || [];
     }
+
+    /*sendMarkedToStore()*/
 
     $: savedChunks = activeTextId != null && retrieveSavedWords(texts[activeTextId][0]) || {};
 
