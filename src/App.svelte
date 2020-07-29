@@ -22,8 +22,6 @@
         return ($allMarked[text] && $allMarked[text][chunk]) || [];
     }
 
-    /*sendMarkedToStore()*/
-
     $: savedChunks = activeTextId != null && retrieveSavedWords(texts[activeTextId][0]) || {};
 
     $: initial = activeChunk != null && activeWord != null

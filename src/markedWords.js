@@ -20,11 +20,15 @@ export default {
   },
 
   applyChanges() {
-    console.log("Saving marked words!", allMarked)
     localStorage.setItem("allMarked", JSON.stringify(allMarked));
     for (const s of subscribers) {
       s(allMarked);
     }
+  },
+
+  set(value) {
+    allMarked = value;
+    this.applyChanges();
   },
 
   updateCurrent(textId, chunkId, marked) {
