@@ -49,11 +49,6 @@
 
     function toggleEntered(word) {
         inputValue = smartToggleSubstring(inputValue, word);
-        marked = updateMarkedFromInput(marked, inputValue);
-    }
-
-    function inputKeyup({ target }) {
-        marked = updateMarkedFromInput(marked, inputValue);
     }
 
     function applySearch() { dictionaryWord = inputValue }
@@ -130,7 +125,7 @@
         <WordCollector words={marked} markedClass="entered" on:wordClick={e => toggleEntered(e.detail.word.word)} />
 
         <div class="segment">
-            <InputSearchWord bind:inputValue initialInput={initial && initial.input} on:inputKeyup={inputKeyup} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
+            <InputSearchWord bind:inputValue initialInput={initial && initial.input} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
         </div>
     </div>
 

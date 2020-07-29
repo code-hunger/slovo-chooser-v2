@@ -10,10 +10,8 @@
         inputValue = '';
     }
 
-    $: console.log(wasSearched);
-
-    function searchLowercase() { inputValue = inputValue.toLowerCase(); dispatch('inputKeyup') }
-    function searchBackspace() { inputValue = inputValue.slice(0, -1); dispatch('inputKeyup') }
+    function searchLowercase() { inputValue = inputValue.toLowerCase(); }
+    function searchBackspace() { inputValue = inputValue.slice(0, -1); }
     function searchTrim() { inputValue = trimPunctuation(inputValue).trim(); }
 
     function applySearch() {
@@ -46,7 +44,6 @@
            class="myinput"
            class:was-searched={wasSearched}
            bind:value={inputValue}
-           on:keyup={e => dispatch('inputKeyup', e)}
            on:keydown={e => {if(e.keyCode == 13) applySearch()}} />
    <i class="close link icon" on:click={clearInput}></i>
    <button class="ui icon button" on:click={applySearch}>
