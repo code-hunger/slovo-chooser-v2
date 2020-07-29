@@ -158,7 +158,7 @@ export function retrieveSavedWords(title) {
   return saved ? JSON.parse(saved) : {};
 }
 
-export function textDeleterCreator(resetCurrentlyEditing, textsUpdater) {
+export function textDeleterCreator(resetCurrentlyEditing, textsUpdater, markedWordsCurrentCleaner) {
   return (currentTextId, texts) => ({ detail }) => {
     const i = detail; // the text id to delete
 
@@ -167,6 +167,7 @@ export function textDeleterCreator(resetCurrentlyEditing, textsUpdater) {
 
     localStorage.removeItem("chunks-" + md5(texts[i][0]));
     textsUpdater(immutableSplice(texts, i));
+    markedWordsCurrentCleaner(i)
 
     if(currentTextId == i) resetCurrentlyEditing()
   }

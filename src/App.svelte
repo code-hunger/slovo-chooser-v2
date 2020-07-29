@@ -101,7 +101,9 @@
         persistTexts(texts);
     }
 
-    const textDeleter = textDeleterCreator(resetCurrentlyEditing, textsUpdater);
+    function markedWordsCurrentCleaner(textId) { $allMarked = {...$allMarked, [textId]: undefined}; }
+
+    const textDeleter = textDeleterCreator(resetCurrentlyEditing, textsUpdater, markedWordsCurrentCleaner);
     const savedWordDeleter = savedWordDeleterCreator(savedChunksUpdater, resetCurrentWord);
     const switchChunk = switchChunkCreator(currentChunkIdUpdater);
     const onSaveChunk = onSaveChunkCreator(resetCurrentWord, currentSavedChunksUpdater);
