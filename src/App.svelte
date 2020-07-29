@@ -4,6 +4,7 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import exportToCsv from "./exportToCSV.js"
+    import allMarked from "./markedWords.js"
     import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator, downloadSavedWords, exportState } from "./utils.js"
     import md5 from "md5";
     import _ from "lodash"
@@ -14,6 +15,11 @@
 
     let activeWord = null, activeChunk = null, activeTextId = null;
 
+    $: allMarked.updateCurrent(activeChunk, currentMarked);
+    $: currentMarked = recalcCurrentMarked(activeChunk);
+
+    function recalcCurrentMarked (chunk) {
+        return $allMarked[activeChunk] || [];
     }
 
     $: savedChunks = activeTextId != null && retrieveSavedWords(texts[activeTextId][0]) || {};
@@ -143,6 +149,8 @@
             {#if activeTextId != null}
                 <ChunkEditor chunkText={texts[activeTextId][1][activeChunk]}
                              {initial}
+
+                             bind:markedStrings={currentMarked}
 
                              on:requestCancelEdit={onCancelEdit}
                              on:saveChunk={onSaveChunk(activeWord, savedChunks[activeChunk])}

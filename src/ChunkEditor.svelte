@@ -4,25 +4,25 @@
     import InputSearchWord from "./InputSearchWord.svelte"
     import update from "immutability-helper"
     import { tick, createEventDispatcher } from 'svelte';
-    import { arrayToggle, wordToggleMark, wordUnmark, containsWord, smartToggleSubstring, smartRemoveFromString, trimPunctuation, emphasizeWordInStr, inferEnteredFromInput, updateMarkedFromInput } from "./utils.js"
+    import { arrayToggle, wordToggleMark, wordUnmark, containsWord, smartToggleSubstring, smartRemoveFromString, trimPunctuation, emphasizeWordInStr, inferEnteredFromInput, updateMarkedFromInput, immutableSplice } from "./utils.js"
     import ContextStrategyChooser from "./ContextStrategyChooser.svelte";
     import _ from "lodash"
 
 	import { slide } from 'svelte/transition';
 
-    export let chunkText, initial = { input: '', translation: '', context: '' };
+    export let chunkText, markedStrings, initial = { input: '', translation: '', context: '' };
 
     const dispatch = createEventDispatcher();
 
     $: words = chunkText
         .split(/[\s–]+/)
         .filter(w => trimPunctuation(w) != '')
-        .map(w => ({ word: w, marked: false  }));
+        .map(w => ({ word: w, marked: markedStrings.indexOf(w) != -1 }));
 
     $: inputValue = (chunkText, initial && initial.input || '');
     $: translationValue = (chunkText, initial && initial.translation || '');
 
-    $: marked = (chunkText, []);
+    $: selectedMarked = markedStrings.map(w => containsWord(inputValue, w));
     $: dictionaryWord = (chunkText, '');
 
     $: showContextSelector = showContextSelector || (inputValue && translationValue);
@@ -43,8 +43,12 @@
                 inputValue = word;
 
         words[i] = wordToggleMark(words[i]);
-        marked = arrayToggle(marked, wordUnmark(words[i]));
-        marked = updateMarkedFromInput(marked, inputValue);
+
+        const indexOfMarked = markedStrings.indexOf(word);
+
+        markedStrings = indexOfMarked == -1
+            ?  [...markedStrings, word] // if not marked - mark
+            : immutableSplice(markedStrings, indexOfMarked); // otherwise - unmark
     }
 
     function toggleEntered(word) {
@@ -95,7 +99,6 @@
     async function cancelEdit() {
         dispatch("requestCancelEdit");
         await tick();
-        marked = updateMarkedFromInput(marked, inputValue);
         showContextSelector = false;
     }
 
@@ -122,7 +125,10 @@
     </div>
     <div class="sixteen wide tablet six wide computer column">
         <h3 class="ui header">Marked words</h3>
-        <WordCollector words={marked} markedClass="entered" on:wordClick={e => toggleEntered(e.detail.word.word)} />
+        <WordCollector
+            words={_.zip(markedStrings, selectedMarked).map(([word, marked]) => ({ word, marked }))}
+            markedClass="entered"
+            on:wordClick={e => toggleEntered(e.detail.word.word)} />
 
         <div class="segment">
             <InputSearchWord bind:inputValue initialInput={initial && initial.input} on:applySearch={applySearch} wasSearched={inputValue == dictionaryWord} />
