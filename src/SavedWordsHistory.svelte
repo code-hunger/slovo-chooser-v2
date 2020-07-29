@@ -5,7 +5,7 @@
 
     const dispatch = createEventDispatcher();
 
-    export let chunks, active;
+    export let chunks, activeChunk, activeWord;
 
     $: numberOfWords = _.reduce(chunks, (acc, val) => acc + val.length, 0)
 
@@ -35,7 +35,7 @@
                 <DeletableItem on:click={makeDispatcher('select', chunkId, i)}
                                on:delete={makeDispatcher('delete', chunkId, i)}>
                     <div class="saved-word"
-                         class:currently-editing={active.chunk == chunkId && active.word == i}
+                         class:currently-editing={activeChunk == chunkId && activeWord == i}
                          tabindex=0>
                         <b>{savedWord.input}</b>:
                         {savedWord.translation}

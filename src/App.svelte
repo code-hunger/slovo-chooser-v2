@@ -128,9 +128,11 @@
                           on:delete={textDeleter(currentlyEditing.textId, texts)} />
 
         <div class="centered column row">
-            <SavedWordsContainer chunks={savedChunks} active={currentlyEditing}
+            <SavedWordsContainer chunks={savedChunks}
+                                 activeChunk={currentlyEditing.chunk}
+                                 activeWord={currentlyEditing.word}
                                  on:select={selectSavedWord}
-                                 on:delete={savedWordDeleter(currentlyEditing, savedChunks)}/>
+                                 on:delete={savedWordDeleter(currentlyEditing.chunk, currentlyEditing.word, savedChunks)}/>
         </div>
     </div>
 
@@ -148,7 +150,7 @@
 
                              on:requestCancelEdit={onCancelEdit}
                              on:saveChunk={onSaveChunk(currentlyEditing.word, savedChunks[currentlyEditing.chunk])}
-                             on:changeChunk={switchChunk(currentlyEditing, texts[currentlyEditing.textId])}/>
+                             on:changeChunk={switchChunk(currentlyEditing.chunk, currentlyEditing.word, texts[currentlyEditing.textId])}/>
             {:else}
                 No text.
             {/if}

@@ -173,8 +173,8 @@ export function textDeleterCreator(resetCurrentlyEditing, textsUpdater) {
 }
 
 export function savedWordDeleterCreator(savedChunksUpdater, resetCurrentWord) {
-  return (currentlyEditing, savedChunks) => ({ detail: { chunk, word } }) => {
-    if(currentlyEditing.chunk == chunk && currentlyEditing.word == word)
+  return (activeChunk, activeWord, savedChunks) => ({ detail: { chunk, word } }) => {
+    if(activeChunk == chunk && activeWord == word)
     {
       if(!confirm("You're currently editing this word.\n" +
         "Are you sure you want to delete it?"))
@@ -195,14 +195,14 @@ export function persistTexts(texts) {
 }
 
 export function switchChunkCreator(currentChunkIdUpdater) {
-  return (currentlyEditing, currentText) => ({ detail }) => {
+  return (activeChunk, activeWord, currentText) => ({ detail }) => {
     const dir = detail > 0 ? 1 : -1;
-    if(currentlyEditing.word != null) {
+    if(activeWord != null) {
       alert("A word is currently being edited!")
       return
     }
 
-    const nextChunkId = dir + currentlyEditing.chunk;
+    const nextChunkId = dir + activeChunk;
 
     if(!(nextChunkId in currentText[1])) {
       alert("Next chunk id '" + nextChunkId + "' not found in text.");
