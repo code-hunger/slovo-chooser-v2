@@ -53,6 +53,10 @@
         opacity: 0.8;
     }
 
+    .word.unknown {
+        background-color: #FF8;
+    }
+
     .word.unknown + .tooltip {
         color: blue;
         padding: 0 1ex;
