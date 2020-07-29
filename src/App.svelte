@@ -15,11 +15,18 @@
 
     let activeWord = null, activeChunk = null, activeTextId = null;
 
-    $: allMarked.updateCurrent(activeTextId, activeChunk, currentMarked);
+    $: sendMarkedToStore(currentMarked)
     $: currentMarked = recalcCurrentMarked(activeTextId, activeChunk);
 
+    const emptyMarked = [];
     function recalcCurrentMarked (text, chunk) {
-        return ($allMarked[text] && $allMarked[text][chunk]) || [];
+        console.log("Recalc marked");
+        return ($allMarked[text] && $allMarked[text][chunk]) || emptyMarked;
+    }
+
+    function sendMarkedToStore(marked) {
+        console.log("Saving marked words!", marked)
+        allMarked.updateCurrent(activeTextId, activeChunk, marked);
     }
 
     $: savedChunks = activeTextId != null && retrieveSavedWords(texts[activeTextId][0]) || {};
