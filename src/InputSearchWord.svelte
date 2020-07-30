@@ -34,9 +34,9 @@
 
 {#if inputValue}
     <div>
-        <a href="#" on:click={searchLowercase}><i class="arrow alternate circle down outline icon" /></a>
-        <a href="#" on:click={searchBackspace}><i class="arrow alternate circle left outline icon" /></a>
-        <a href="#" on:click={searchTrim}><i class="cut icon" /></a>
+        <a href="#" on:click|preventDefault={searchLowercase}><i class="arrow alternate circle down outline icon" /></a>
+        <a href="#" on:click|preventDefault={searchBackspace}><i class="arrow alternate circle left outline icon" /></a>
+        <a href="#" on:click|preventDefault={searchTrim}><i class="cut icon" /></a>
     </div>
 {/if}
 
