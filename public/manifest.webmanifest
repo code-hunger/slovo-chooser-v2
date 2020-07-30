@@ -1,0 +1,8 @@
+{
+  "short_name": "Slovo Chooser",
+  "name": "Slovo Chooser Full Name",
+  "description": "An aid to your experience of understanding texts in foreign languages.",
+  "start_url": "./",
+  "display": "standalone",
+  "scope": "./"
+}
