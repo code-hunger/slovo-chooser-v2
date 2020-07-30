@@ -6,6 +6,8 @@
 
     export let inputValue, initialInput, wasSearched;
 
+    $: inputValue = initialInput || '';
+
     function clearInput() {
         inputValue = '';
     }

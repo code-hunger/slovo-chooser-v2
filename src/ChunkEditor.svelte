@@ -19,8 +19,9 @@
         .filter(w => trimPunctuation(w) != '')
         .map(w => ({ word: w, marked: markedStrings.indexOf(w) != -1 }));
 
-    $: inputValue = (chunkText, initial && initial.input || '');
-    $: translationValue = (chunkText, initial && initial.translation || '');
+    $: inputValue = (chunkText, '');
+    $: initTransl = initial && initial.translation 
+    $: translationValue = (chunkText, initTransl || '');
 
     $: selectedMarked = markedStrings.map(w => containsWord(inputValue, w));
     $: dictionaryWord = (chunkText, '');
