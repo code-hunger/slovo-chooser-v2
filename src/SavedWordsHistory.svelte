@@ -2,6 +2,7 @@
     import _ from "lodash"
     import { createEventDispatcher } from 'svelte';
     import DeletableItem from "./DeletableItem.svelte"
+    import Hideable from "./Hideable.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -28,23 +29,28 @@
 </style>
 
 {#if numberOfWords}
-    Saved ({numberOfWords}):
-    <div class="ui bulleted list saved-words">
-        {#each Object.keys(chunks) as chunkId}
-            {#each chunks[chunkId] as savedWord, i}
-                <DeletableItem on:click={makeDispatcher('select', chunkId, i)}
-                               on:delete={makeDispatcher('delete', chunkId, i)}>
-                    <div class="saved-word"
-                         class:currently-editing={activeChunk == chunkId && activeWord == i}
-                         tabindex=0>
-                        <b>{savedWord.input}</b>:
-                        {savedWord.translation}
-                    </div>
-                </DeletableItem>
-            {/each}
-        {/each}
-    </div>
+    <Hideable>
+        <div slot="title">
+            <h4>Saved ({numberOfWords})</h4>
+        </div>
+        <div slot="content">
+            <div class="ui bulleted list saved-words">
+                {#each Object.keys(chunks) as chunkId}
+                    {#each chunks[chunkId] as savedWord, i}
+                        <DeletableItem on:click={makeDispatcher('select', chunkId, i)}
+                                       on:delete={makeDispatcher('delete', chunkId, i)}>
+                        <div class="saved-word"
+                             class:currently-editing={activeChunk == chunkId && activeWord == i}
+                             tabindex=0>
+                            <b>{savedWord.input}</b>:
+                            {savedWord.translation}
+                        </div>
+                        </DeletableItem>
+                    {/each}
+                {/each}
+            </div>
+        </div>
+    </Hideable>
 {:else}
     The words you save will appear here.
 {/if}
-
