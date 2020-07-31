@@ -120,18 +120,28 @@
 
 <style>
     .grid { border: 1px solid black; }
-    a { display: block; }
+    .link-button { color: cornflowerblue; background: inherit; border: none; cursor: pointer; }
+    .block { display: block; }
+    .main-page-actions button { margin-top: 1ex; }
 </style>
 
 <div class="ui stackable grid container">
     <div class="three wide column">
-        <a href='#' on:click|preventDefault={download}>Export to CSV</a>
-        <a href='#' on:click|preventDefault={exportState}>Export whole state</a>
-        {#if !showTextAdder}
-            <a href='#' on:click|preventDefault={() => showTextAdder = true}>
-                Add a new text source
-            </a>
-        {/if}
+        <div class="ui list main-page-actions">
+            {#if !showTextAdder}
+                <button class="fluid ui item compact labeled icon small button block" on:click={() => showTextAdder = true}>
+                    <i class="circle plus icon"></i>
+                    Add text
+                </button>
+            {/if}
+
+            <button class="fluid ui item compact labeled icon small button block" on:click={download}>
+                <i class="download icon"></i>
+                Export to csv
+            </button>
+
+            <button class="item link-button block" on:click={exportState}>Export whole state</button>
+        </div>
 
         <TextSourceSelect currentId={activeTextId} {texts}
                           on:select={({ detail }) => selectText(detail)}
