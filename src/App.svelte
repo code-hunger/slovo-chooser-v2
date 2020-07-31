@@ -4,10 +4,8 @@
     import TextAdder from "./TextAdder.svelte"
     import TextSourceSelect from "./TextSourceSelect.svelte"
     import MarkedWordsList from "./MarkedWordsList.svelte"
-    import exportToCsv from "./exportToCSV.js"
     import allMarked from "./markedWords.js"
     import { persistSavedWords, retrieveSavedWords, savedWordDeleterCreator, textDeleterCreator, switchChunkCreator, persistTexts, onSaveChunkCreator, downloadSavedWords, exportState } from "./utils.js"
-    import md5 from "md5";
     import _ from "lodash"
 
     let texts = JSON.parse(localStorage.getItem("texts") || '[]') // No Maybe in JS :(
