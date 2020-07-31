@@ -135,10 +135,12 @@
                 </button>
             {/if}
 
-            <button class="fluid ui item compact labeled icon small button block" on:click={download}>
-                <i class="download icon"></i>
-                Export to csv
-            </button>
+            {#if activeTextId != null}
+                <button class="fluid ui item compact labeled icon small button block" on:click={download}>
+                    <i class="download icon"></i>
+                    Export to csv
+                </button>
+            {/if}
 
             {#if window.location.hash.indexOf("state") != -1}
                 <!-- One probably wont need this so let's hide it by default -->
