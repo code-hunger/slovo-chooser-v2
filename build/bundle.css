@@ -1,10 +1,10 @@
-.grid.svelte-1agncxo{border:1px solid black}a.svelte-1agncxo{display:block}
+.grid.svelte-15olbex.svelte-15olbex{border:1px solid black}.link-button.svelte-15olbex.svelte-15olbex{color:cornflowerblue;background:inherit;border:none;cursor:pointer}.block.svelte-15olbex.svelte-15olbex{display:block}.main-page-actions.svelte-15olbex button.svelte-15olbex{margin-top:1ex}
 .saved-word.svelte-1eicrcr{cursor:pointer}.currently-editing.svelte-1eicrcr{text-decoration:underline;color:#001f3f;cursor:disabled;pointer-events:none}
 .item.svelte-1gvowfm{cursor:pointer}.item-link.svelte-1gvowfm{color:#0074D9}
-.item.svelte-1f0jdpi{cursor:pointer}
+.item.svelte-erupuf button.svelte-erupuf{background:inherit;color:dodgerblue;padding-left:0;padding-right:0}.item.svelte-erupuf button.svelte-erupuf:hover{background:#DDD}
 textarea.svelte-g3sovv.svelte-g3sovv{width:100%;height:20em}input[type="number"].svelte-g3sovv.svelte-g3sovv{max-width:2.5em}.form.svelte-g3sovv label.svelte-g3sovv{cursor:default}#min-elements-types.svelte-g3sovv.svelte-g3sovv{width:auto}.form.svelte-g3sovv .unpadded.svelte-g3sovv{padding:0}.form.svelte-g3sovv .unbordered.svelte-g3sovv{border-top:0;border-left:0;border-right:0;outline:0}#join-if-shorter-number[disabled].svelte-g3sovv.svelte-g3sovv{opacity:0.4}
 .row.svelte-pgr9w1.svelte-pgr9w1,.column.svelte-pgr9w1.svelte-pgr9w1{background:#F9FbFb}
-.header.svelte-1e20v9f{position:relative}.title.svelte-1e20v9f{float:left}.button.svelte-1e20v9f{float:right}.header.svelte-1e20v9f:after{content:'';clear:both;display:block}
+.header.svelte-lok1hb.svelte-lok1hb{position:relative}.title.svelte-lok1hb.svelte-lok1hb{float:left}.button-container.svelte-lok1hb.svelte-lok1hb{float:right}.button-container.svelte-lok1hb button.svelte-lok1hb::before{content:"(";color:black}.button-container.svelte-lok1hb button.svelte-lok1hb::after{content:")";color:black}.button-container.svelte-lok1hb button.svelte-lok1hb{background:inherit;color:dodgerblue;margin:0;border:none;cursor:pointer}.button-container.svelte-lok1hb button.svelte-lok1hb:hover{text-decoration:underline}.header.svelte-lok1hb.svelte-lok1hb:after{content:'';clear:both;display:block}
 .dictionary.svelte-1y2idiy{position:relative;display:block;width:100%;padding:1em}iframe.svelte-1y2idiy{height:500px}
 .input.svelte-zto7a9 input.myinput.was-searched.svelte-zto7a9{color:darkgreen}
 .item-holder.svelte-1lhifnf.svelte-1lhifnf{margin-right:1.5em}.deletable-item.svelte-1lhifnf>.delete-saved-word.svelte-1lhifnf{display:none ;position:absolute;right:0;top:10%}.non-button.svelte-1lhifnf.svelte-1lhifnf{background:none;border:none;padding:0}.deletable-item.svelte-1lhifnf:hover>.delete-saved-word.svelte-1lhifnf,.deletable-item.svelte-1lhifnf:focus>.delete-saved-word.svelte-1lhifnf{display:block }
