@@ -138,7 +138,7 @@
                           on:delete={textDeleter(activeTextId, texts)} />
 
         <div class="centered column row">
-            <MarkedWordsList marked={$allMarked[activeTextId]} />
+            <MarkedWordsList marked={$allMarked[activeTextId]} on:selectChunk={e => currentChunkIdUpdater(parseInt(e.detail))} />
         </div>
 
         <div class="centered column row">
