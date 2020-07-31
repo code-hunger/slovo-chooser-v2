@@ -140,7 +140,10 @@
                 Export to csv
             </button>
 
-            <button class="item link-button block" on:click={exportState}>Export whole state</button>
+            {#if window.location.hash.indexOf("state") != -1}
+                <!-- One probably wont need this so let's hide it by default -->
+                <button class="item link-button block" on:click={exportState}>Export whole state</button>
+            {/if}
         </div>
 
         <TextSourceSelect currentId={activeTextId} {texts}
