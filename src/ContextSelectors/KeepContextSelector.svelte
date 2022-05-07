@@ -4,4 +4,5 @@
     $: selectedContext = initialContext;
 </script>
 
-<em>{initialContext}</em>
+<b style="color: darkblue">Saved context:</b>
+<em>{@html initialContext}</em>

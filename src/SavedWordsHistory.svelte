@@ -26,6 +26,12 @@
         cursor: disabled;
         pointer-events: none;
     }
+
+    .when-empty {
+        margin-top: -1px;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
 </style>
 
 {#if numberOfWords}
@@ -52,5 +58,7 @@
         </div>
     </Hideable>
 {:else}
+<div class="when-empty">
     The words you save will appear here.
+</div>
 {/if}

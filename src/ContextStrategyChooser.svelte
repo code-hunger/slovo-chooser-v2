@@ -7,34 +7,29 @@
 
     $: chosenStrategy = (!initialContext && 3 || 0);
 
-    $: strategies = [
+    const strategies = [
         {
             desc: "Keep same (no changes)",
-            viable: initialContext && initialContext.length > 0,
             component: KeepContextSelector,
             properties: { initialContext },
             activate() {}
         },
         {
             desc: 'Empty context',
-            viable: true,
             activate() { selectedContext = ''; }
         },
         {
             desc: 'Use the whole chunk as a context',
-            viable: true,
             activate() { selectedContext = words.map(w => w.word).join(' ') }
         },
         {
             desc:'Choose only part of the chunk to use as a context.',
-            viable: true,
             component: PartialContextSelector,
             properties: { words, selectedContext },
             activate() {}
         },
         {
             desc: "Manually select context",
-            viable: true,
             component: ManualContextSelector,
             properties: {},
             activate() {}
@@ -52,19 +47,31 @@
     <div class="seven wide column">
         <div class="ui form">
             <div class="grouped fields">
-                {#each (strategies) as strategy, i}
-                    {#if strategy.viable}
-                        <div class="field">
-                            <div class="ui radio checkbox">
-                                <input type="radio"
-                                       name="context-strategy"
-                                       value={i}
-                                       bind:group={chosenStrategy}
-                                       on:change={strategy.activate}
-                                       id={"context-strategy-option-" + i} />
-                                <label for={"context-strategy-option-" + i}>{strategy.desc}</label>
-                            </div>
+                {#if initialContext && initialContext.length > 0}
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio"
+                                   name="context-strategy"
+                                   value={0}
+                                   bind:group={chosenStrategy}
+                                   id={"context-strategy-option-0"} />
+                            <label for={"context-strategy-option-0"}>{strategies[0].desc}</label>
                         </div>
+                    </div>
+                {/if}
+                {#each (strategies) as strategy, i}
+                    {#if i > 0}
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio"
+                                   name="context-strategy"
+                                   value={i}
+                                   bind:group={chosenStrategy}
+                                   on:change={strategy.activate}
+                                   id={"context-strategy-option-" + i} />
+                            <label for={"context-strategy-option-" + i}>{strategy.desc}</label>
+                        </div>
+                    </div>
                     {/if}
                 {/each}
             </div>

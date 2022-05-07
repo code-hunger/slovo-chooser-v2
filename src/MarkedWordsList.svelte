@@ -13,6 +13,11 @@
 <style type="text/css" media="screen">
     .item button { background: inherit; color:dodgerblue; padding-left: 0; padding-right: 0; }
     .item button:hover { background: #DDD; }
+
+    .when-empty {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
 </style>
 
 {#if numberOfWords}
@@ -26,7 +31,7 @@
                     {#if marked[chunkId].length}
                         <div class="item" style="padding: 0; margin: 0">
                             <button on:click={() => dispatch('selectChunk', chunkId)} class="ui icon compact tiny button">
-                                <i class="share square icon" />
+                                <i class="share square icon"></i>
                             </button>
                             {marked[chunkId].join(', ')}
                         </div>
@@ -36,5 +41,7 @@
         </div>
     </Hideable>
 {:else}
+<div class="when-empty">
     Your marked words will appear here.
+</div>
 {/if}

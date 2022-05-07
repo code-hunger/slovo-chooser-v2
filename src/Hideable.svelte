@@ -11,13 +11,14 @@
     .button-container button { background: inherit; color:dodgerblue; margin: 0; border: none; cursor: pointer; }
     .button-container button:hover { text-decoration: underline; }
     .header:after { content: ''; clear: both; display: block; }
+    .show-hide-btn { font-weight: initial; }
 </style>
 
 <div class="header">
     <div class="title"><slot name="title" /></div>
 
     <div class="button-container">
-        <button on:click={() => open = !open}>
+        <button on:click={() => open = !open} class="show-hide-btn">
             {open ? "hide" : "show"}
         </button>
     </div>

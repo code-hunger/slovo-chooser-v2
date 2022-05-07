@@ -21,6 +21,10 @@
         color: #001f3f;
         text-decoration: underline;
     }
+
+    .when-empty {
+        border-top: 1px solid black;
+    }
 </style>
 
 {#if texts.length}
@@ -38,6 +42,8 @@
         {/each}
     </div>
 {:else}
+<div class="when-empty">
     Your texts will appear here.
+</div>
 {/if}
 
